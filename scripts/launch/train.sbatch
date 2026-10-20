@@ -24,9 +24,6 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-# Leonardo modules; flex attention compiles with inductor, which needs a C++20 compiler.
-module load gcc/12.2.0 cuda/12.6
-
 # The first node hosts the torchrun rendezvous.
 HEAD_NODE=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)
 HEAD_NODE_IP=$(srun --nodes=1 --ntasks=1 -w "$HEAD_NODE" hostname --ip-address)

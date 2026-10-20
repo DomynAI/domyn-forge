@@ -30,11 +30,11 @@ from domyn_forge.models.domynedge import model_registry
 SEQ_LEN = 8192
 
 TRAIN_CONFIG = Trainer.Config(
-    hf_assets_path="/path/to/domyn/tokenizer",
+    hf_assets_path="assets/domyn-edge/tokenizers/pretraining",
     metrics=MetricsProcessor.Config(log_freq=10),
-    model_spec=model_registry("edgethinker", max_seq_len=SEQ_LEN),
+    model_spec=model_registry("edgethinker", max_seq_len=SEQ_LEN, vocab_size=115328),
     dataloader=PretokenizedDataLoader.Config(
-        dataset_path="/path/to/pretokenized/train",
+        dataset_path="assets/c4_test/arrow",
         num_workers=1,
         persistent_workers=True,
         pin_memory=True,
