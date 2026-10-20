@@ -1,11 +1,7 @@
 <div align="center">
 
-<picture>
-  <source srcset="static/domyn-logo-white.svg" media="(prefers-color-scheme: dark)">
-  <source srcset="static/domyn-logo-primary.svg" media="(prefers-color-scheme: light)">
-  <img src="static/domyn-logo-primary.svg" alt="Domyn" height="100">
-</picture>
-
+<img src="static/domyn-forge-logo-light.svg#gh-light-mode-only" alt="Domyn Forge" height="100">
+<img src="static/domyn-forge-logo-dark.svg#gh-dark-mode-only" alt="Domyn Forge" height="100">
 
 **Everything you need to continue pretraining or fine-tune DomynEdge with TorchTitan.**
 
