@@ -1,0 +1,39 @@
+name: pre-commit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: true
+
+      # The local hooks call `uv run --no-sync`, so the venv must exist first.
+      - name: Install project and dev dependencies
+        run: uv sync --locked
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      # no-commit-to-branch would fail every push to main; it only makes sense locally.
+      - name: Run pre-commit
+        run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
+        env:
+          SKIP: no-commit-to-branch

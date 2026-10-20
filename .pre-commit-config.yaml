@@ -1,0 +1,62 @@
+# Install once:   uv run pre-commit install
+# Run manually:   uv run pre-commit run --all-files
+#
+# ruff and pytest run from the project venv (uv.lock), so their versions
+# match what `uv run ruff` / `uv run pytest` use.
+#
+# Commit messages follow Conventional Commits:
+#   <type>(<scope>): <msg>   e.g. fix(data): wrong vocab_size
+#   types: feat fix chore docs refactor test perf ci exp
+
+# Test fixtures (tokenizer, c4_test text) are third-party data, not code.
+exclude: ^tests/assets/
+
+# `pre-commit install` sets up both the file checks and the commit message check.
+default_install_hook_types: [pre-commit, commit-msg]
+
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c  # frozen: v6.0.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-ast
+    -   id: check-toml
+    -   id: check-yaml
+    -   id: check-merge-conflict
+    -   id: check-added-large-files
+        args: ['--maxkb=16384']  # tokenizer.json files are ~15.6 MB
+    -   id: no-commit-to-branch
+        args: ['--branch=main']
+
+-   repo: https://github.com/compilerla/conventional-pre-commit
+    rev: 91ab4bf57e58b32adf1a122681f6ebe164d081c8  # frozen: v4.4.0
+    hooks:
+    -   id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [--strict, feat, fix, chore, docs, refactor, test, perf, ci, exp]
+
+-   repo: local
+    hooks:
+    -   id: ruff-format
+        name: ruff format
+        entry: uv run --no-sync ruff format
+        language: system
+        types_or: [python, pyi]
+    -   id: ruff-check
+        name: ruff check
+        entry: uv run --no-sync ruff check --fix --exit-non-zero-on-fix
+        language: system
+        types_or: [python, pyi]
+    -   id: pyright
+        name: pyright
+        entry: uv run --no-sync pyright
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+    -   id: pytest
+        name: pytest (CPU unit tests)
+        entry: uv run --no-sync pytest -x -q
+        language: system
+        types: [python]
+        pass_filenames: false
