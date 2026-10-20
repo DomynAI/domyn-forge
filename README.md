@@ -1,9 +1,9 @@
 <div align="center">
 
 <picture>
-  <source srcset="static/domyn-logo-white.svg" media="(prefers-color-scheme: dark)">
-  <source srcset="static/domyn-logo-primary.svg" media="(prefers-color-scheme: light)">
-  <img src="static/domyn-logo-primary.svg" alt="Domyn" height="100">
+  <source srcset="static/domyn-forge-logo-dark.svg" media="(prefers-color-scheme: dark)">
+  <source srcset="static/domyn-forge-logo-light.svg" media="(prefers-color-scheme: light)">
+  <img src="static/domyn-forge-logo-light.svg" alt="Domyn" height="100">
 </picture>
 
 
