@@ -11,12 +11,12 @@ authors = [
 
 dependencies = [
     # Pinned in [tool.uv.sources]; brings torchdata, datasets, tyro, spmd_types, ...
-    "torchtitan",
+    "torchtitan==0.3.0",
     "datasets>=3.6.0",
     "pyarrow",
     # 1.0 pre-releases drop AddedToken, which the pinned torchtitan imports.
     "tokenizers<1.0",
-    "torch>=2.14.0.dev0",
+    "torch==2.16.0.dev20261019+cu130",
     "triton",
     "tyro",
     "click",
@@ -52,12 +52,12 @@ environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
 
 [tool.uv.sources]
 torchtitan = { git = "https://github.com/pytorch/torchtitan", tag = "v0.3.0" }
-torch = { index = "pytorch-nightly-cu126" }
-triton = { index = "pytorch-nightly-cu126" }
+torch = { index = "pytorch-nightly" }
+triton = { index = "pytorch-nightly" }
 
 [[tool.uv.index]]
-name = "pytorch-nightly-cu126"
-url = "https://download.pytorch.org/whl/nightly/cu126"
+name = "pytorch-nightly"
+url = "https://download.pytorch.org/whl/nightly/cu130"
 explicit = true
 
 [tool.pytest.ini_options]

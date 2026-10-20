@@ -16,7 +16,7 @@ class DomynEdgeAttention(torchtitan.models.common.attention.BaseAttention):
     """Grouped-query attention with per-layer head_dim, QK norm, optional RoPE and sliding window.
 
     Layers with ``sliding_window_size > 0`` attend within a local window; global layers use ``-1``.
-    RoPE is applied only when ``use_rope`` is set (the global layers in the registered flavors).
+    RoPE is applied only when ``use_rope`` is set (the sliding-window layers in the registered flavors).
     """
 
     @dataclasses.dataclass(kw_only=True, slots=True)
@@ -309,6 +309,7 @@ class DomynEdgeModel(Decoder):
         """
         attn_config = self.config.first_attention
         assert attn_config is not None, "DomynEdgeModel has no attention layers"
+
         inner_attention = attn_config.inner_attention
         if isinstance(inner_attention, torchtitan.models.common.attention.VarlenAttention.Config):
             return torchtitan.models.common.attention.create_varlen_metadata_for_document(positions)

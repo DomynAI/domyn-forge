@@ -67,7 +67,7 @@ def domynedge_configs(
     """Build the DomynEdge model config for a given flavor.
 
     DomynEdge is a hybrid dense decoder: each layer has its own ``head_dim`` and either a sliding-window
-    or a global (``sliding_window_size=-1``) attention. RoPE is applied only on the global layers.
+    or a global (``sliding_window_size=-1``) attention. RoPE is applied only on the sliding-window layers.
 
     Args:
         flavor: Model flavor name (``"debugmodel"`` or ``"edgethinker"``).
@@ -138,7 +138,7 @@ def domynedge_configs(
                             q_heads=(q_heads := 4),
                             kv_heads=(kv_heads := 4),
                             head_dim=(head_dim := hs),
-                            use_rope=hs == 64,
+                            use_rope=ws == 128,
                             rope=torchtitan.models.common.CosSinRoPE.Config(
                                 dim=head_dim,
                                 max_seq_len=max_seq_len,
@@ -167,7 +167,6 @@ def domynedge_configs(
                                 in_features=q_heads * head_dim, out_features=dim, param_init=linear_init(i)
                             ),
                             inner_attention=inner_attention(
-                                cp_comm_type="a2a" if ws != -1 else "p2p",
                                 layer_num=i,
                                 head_size=head_dim,
                                 kv_heads=kv_heads,
@@ -226,7 +225,7 @@ def domynedge_configs(
                             q_heads=(q_heads := 32),
                             kv_heads=(kv_heads := 8),
                             head_dim=(head_dim := hs),
-                            use_rope=hs == 64,
+                            use_rope=ws == 1024,
                             rope=torchtitan.models.common.CosSinRoPE.Config(
                                 dim=head_dim,
                                 max_seq_len=max_seq_len,
@@ -255,7 +254,6 @@ def domynedge_configs(
                                 in_features=q_heads * head_dim, out_features=dim, param_init=linear_init(i)
                             ),
                             inner_attention=inner_attention(
-                                cp_comm_type="a2a" if ws != -1 else "p2p",
                                 layer_num=i,
                                 head_size=head_dim,
                                 kv_heads=kv_heads,

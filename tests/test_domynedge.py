@@ -30,10 +30,10 @@ MAX_SEQ_LEN = 512
 DEBUG_VOCAB_SIZE = 2048
 DEBUG_WINDOW = 128
 
-# Per-layer (head_dim, sliding_window_size, use_rope) of each flavor. RoPE is on the head_dim 64 layers: the global
-# ones in debugmodel, the sliding-window ones in edgethinker (matching the HF config's default `position_layers`).
+# Per-layer (head_dim, sliding_window_size, use_rope) of each flavor. RoPE is on the sliding-window layers in both
+# flavors (matching the HF config's default `position_layers`).
 DEBUG_LAYERS = [
-    (head_dim, window, head_dim == 64)
+    (head_dim, window, window != -1)
     for head_dim, window in zip(
         [64, 64] + [32, 32, 32, 64] * 2 + [64, 64], [-1, -1] + [128, 128, 128, -1] * 2 + [-1, -1], strict=True
     )
