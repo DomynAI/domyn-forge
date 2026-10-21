@@ -1,18 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Domyn
 # SPDX-License-Identifier: Apache-2.0
 
-"""Parity between a torchtitan DomynEdge model and its HuggingFace conversion.
-
-A randomly initialized debug model is saved as a DCP checkpoint, converted with
-``scripts/huggingface/convert.py`` exactly as a trained checkpoint would be, loaded back
-through ``AutoModelForCausalLM`` with the bundled remote code, and both models must
-produce the same logits on the same tokens.
-
-Both models run in float32 without autocast, so the comparison is not swamped by bfloat16
-rounding (~2% relative on the logits of this model, larger than many conversion bugs would
-show). The only bfloat16 step left is the varlen (flash) attention kernel, which both run on
-the same inputs; it also means the comparison needs a CUDA device.
-"""
+"""Parity between a torchtitan DomynEdge model and its HuggingFace conversion."""
 
 import importlib.util
 import pathlib

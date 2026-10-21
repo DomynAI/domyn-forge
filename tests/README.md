@@ -12,6 +12,7 @@ Tests that need a GPU are skipped when CUDA is not available, so in CI
 | [`test_domynedge.py`](test_domynedge.py) | Flavor configs, weight tying, state dict adapter, `update_from_config` checks, sharding configs | Forward: varlen vs flex parity (logits and gradients), causality, packed documents, sliding window |
 | [`test_token_datasets.py`](test_token_datasets.py) | Pretokenized `*.arrow` dataset and dataloader: causal shift and padding, loss masking with and without `token_type_ids`, shuffling, exact resume, data-parallel splits, `drop_last`, `max_docs_per_batch` | — |
 | [`test_hf_parity.py`](test_hf_parity.py) | — | DCP -> HF conversion gives the same logits as the torchtitan model |
+| [`test_hf_generation.py`](test_hf_generation.py) | — | HF model with the KV cache gives the logits of an uncached forward: `generate()` decode steps, chunked prefill with and without a mask |
 | [`test_dataloader_restore.py`](test_dataloader_restore.py) | — | **Integration, 4 GPUs.** DomynEdge training resumed from a checkpoint reproduces the batches, losses and validation batches of an uninterrupted run (varlen and flex) |
 
 Integration tests are marked `integration` and are skipped unless 4 GPUs are visible. Select or exclude them with

@@ -326,7 +326,7 @@ class DomynEdgeAttention(torch.nn.Module):
             k, v = k.transpose(1, 2), v.transpose(1, 2)
 
         if q.size(1) > 1:
-            q, q_indices, q_cu_seqlen, q_maxseq = unpad_input(q, attention_mask)
+            q, q_indices, q_cu_seqlen, q_maxseq = unpad_input(q, attention_mask[:, -sequence_length:])
         else:
             q_maxseq = 1
             q_cu_seqlen = torch.arange(batch_size + 1, dtype=torch.int32, device=q.device)
@@ -448,8 +448,9 @@ class DomynEdgeModel(DomynEdgePreTrainedModel):
         if use_cache and past_key_values is None:
             past_key_values = transformers.DynamicCache(config=self.config)
 
+        past_seen_tokens = past_key_values.get_seq_length() if past_key_values is not None else 0
+
         if position_ids is None:
-            past_seen_tokens = past_key_values.get_seq_length() if past_key_values is not None else 0
             position_ids = torch.arange(inputs_embeds.shape[1], device=inputs_embeds.device) + past_seen_tokens
             position_ids = position_ids.unsqueeze(0)
 
@@ -457,7 +458,11 @@ class DomynEdgeModel(DomynEdgePreTrainedModel):
         position_embeddings = self.rotary_emb(hidden_states, position_ids)
 
         if attention_mask is None:
-            attention_mask = torch.ones(hidden_states.shape[:2], device=hidden_states.device, dtype=torch.bool)
+            attention_mask = torch.ones(
+                (hidden_states.shape[0], past_seen_tokens + hidden_states.shape[1]),
+                device=hidden_states.device,
+                dtype=torch.bool,
+            )
 
         for decoder_layer in self.layers:
             hidden_states = decoder_layer(
