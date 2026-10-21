@@ -402,7 +402,7 @@ class DomynEdgePreTrainedModel(transformers.PreTrainedModel):
     _supports_flex_attn = False
 
     _can_compile_fullgraph = True
-    _supports_attention_backend = True
+    _supports_attention_backend = False
     _can_record_outputs = {
         "hidden_states": DomynEdgeDecoderLayer,
     }
