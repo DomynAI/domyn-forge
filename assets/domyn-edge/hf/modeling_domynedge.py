@@ -51,6 +51,8 @@ import torch
 import torch.nn.attention.varlen
 import transformers
 import transformers.modeling_outputs
+from transformers.utils.generic import can_return_tuple, merge_with_config_defaults
+from transformers.utils.output_capturing import capture_outputs
 
 from .configuration_domynedge import DomynEdgeConfig
 
@@ -427,6 +429,8 @@ class DomynEdgeModel(DomynEdgePreTrainedModel):
         # Initialize weights and apply final processing
         self.post_init()
 
+    @merge_with_config_defaults
+    @capture_outputs
     def forward(
         self,
         input_ids: torch.LongTensor | None = None,
@@ -495,6 +499,7 @@ class DomynEdgeForCausalLM(DomynEdgePreTrainedModel, transformers.GenerationMixi
         # Initialize weights and apply final processing
         self.post_init()
 
+    @can_return_tuple
     def forward(
         self,
         input_ids: torch.LongTensor | None = None,
