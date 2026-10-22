@@ -42,8 +42,9 @@
 {%- if not messages %}
     {{- raise_exception('No messages provided.') }}
 {%- endif %}
+{%- set identity = 'You are Domyn Edge, a model trained by Domyn.' %}
 {%- if tools and tools is iterable and tools is not mapping %}
-    {{- '<|im_start|>system\n' }}
+    {{- '<|im_start|>system\n' + identity + '\n\n' }}
     {{- "# Tools\n\nYou have access to the following functions:\n\n<tools>" }}
     {%- for tool in tools %}
         {{- "\n" }}
@@ -59,10 +60,14 @@
     {%- endif %}
     {{- '<|im_end|>\n' }}
 {%- else %}
+    {{- '<|im_start|>system\n' + identity }}
     {%- if messages[0].role == 'system' %}
         {%- set content = render_content(messages[0].content, false, true)|trim %}
-        {{- '<|im_start|>system\n' + content + '<|im_end|>\n' }}
+        {%- if content %}
+            {{- '\n\n' + content }}
+        {%- endif %}
     {%- endif %}
+    {{- '<|im_end|>\n' }}
 {%- endif %}
 {%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}
 {%- for message in messages[::-1] %}
