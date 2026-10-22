@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Domyn
 # SPDX-License-Identifier: Apache-2.0
 
-"""Generation with the KV cache of the HuggingFace DomynEdge model matches generation without it."""
+"""Generation tests for HF modeling"""
+
+import typing
 
 import pytest
 import torch
@@ -70,3 +72,73 @@ def test_chunked_prefill_matches_full_forward(hf_model, pass_mask):
 
     assert second.past_key_values.get_seq_length() == PROMPT_LEN + NEW_TOKENS
     torch.testing.assert_close(second.logits, full_logits[:, split:], rtol=RTOL, atol=ATOL)
+
+
+def manual_hidden_states(hf_model: torch.nn.Module, tokens: torch.Tensor) -> list[torch.Tensor]:
+    """The embeddings and the output of every decoder layer, with the final norm applied to the last one."""
+    # The DomynEdge classes are loaded with `trust_remote_code`, so their attributes are unknown to the type checker.
+    model = typing.cast(typing.Any, hf_model.model)
+    hidden_states = model.embed_tokens(tokens)
+    position_ids = torch.arange(tokens.shape[1], device=tokens.device).unsqueeze(0)
+    position_embeddings = model.rotary_emb(hidden_states, position_ids)
+    attention_mask = torch.ones(tokens.shape, device=tokens.device, dtype=torch.bool)
+
+    all_hidden_states = [hidden_states]
+    for decoder_layer in model.layers:
+        hidden_states = decoder_layer(
+            hidden_states, attention_mask=attention_mask, position_embeddings=position_embeddings
+        )
+        all_hidden_states.append(hidden_states)
+    all_hidden_states[-1] = model.norm(all_hidden_states[-1])
+    return all_hidden_states
+
+
+@torch.no_grad()
+def test_base_model_output_hidden_states(hf_model):
+    tokens = random_tokens(BATCH_SIZE, PROMPT_LEN)
+    out = hf_model.model(input_ids=tokens, output_hidden_states=True)
+
+    assert out.hidden_states is not None, "output_hidden_states=True returned no hidden states"
+    assert len(out.hidden_states) == hf_model.config.num_hidden_layers + 1
+    torch.testing.assert_close(out.hidden_states[-1], out.last_hidden_state, rtol=0, atol=0)
+
+    layers_iter = enumerate(zip(out.hidden_states, manual_hidden_states(hf_model, tokens), strict=True))
+    for layer_idx, (captured, expected) in layers_iter:
+        torch.testing.assert_close(captured, expected, msg=f"hidden state {layer_idx} differs", rtol=0, atol=0)
+
+
+@torch.no_grad()
+def test_causal_lm_output_hidden_states(hf_model):
+    out = hf_model(input_ids=random_tokens(BATCH_SIZE, PROMPT_LEN), output_hidden_states=True)
+
+    assert out.hidden_states is not None, "output_hidden_states=True returned no hidden states"
+    assert len(out.hidden_states) == hf_model.config.num_hidden_layers + 1
+
+
+@torch.no_grad()
+def test_hidden_states_not_returned_by_default(hf_model):
+    assert hf_model(input_ids=random_tokens(BATCH_SIZE, PROMPT_LEN)).hidden_states is None
+
+
+@torch.no_grad()
+def test_use_cache_defaults_to_config(hf_model):
+    assert hf_model.config.use_cache
+    out = hf_model(input_ids=random_tokens(BATCH_SIZE, PROMPT_LEN))
+
+    assert out.past_key_values is not None, "use_cache did not default to config.use_cache=True"
+    assert out.past_key_values.get_seq_length() == PROMPT_LEN
+
+
+@torch.no_grad()
+def test_explicit_use_cache_false_overrides_config(hf_model):
+    assert hf_model(input_ids=random_tokens(BATCH_SIZE, PROMPT_LEN), use_cache=False).past_key_values is None
+
+
+@torch.no_grad()
+def test_return_dict_false_returns_tuple(hf_model):
+    tokens = random_tokens(BATCH_SIZE, PROMPT_LEN)
+    expected_logits = hf_model(input_ids=tokens, use_cache=False).logits
+    out = hf_model(input_ids=tokens, use_cache=False, return_dict=False)
+
+    assert isinstance(out, tuple), f"return_dict=False returned {type(out).__name__}"
+    torch.testing.assert_close(out[0], expected_logits, rtol=0, atol=0)
