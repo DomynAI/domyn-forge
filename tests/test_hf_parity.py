@@ -86,6 +86,26 @@ def load_hf_model(hf_dir: pathlib.Path, dtype: torch.dtype) -> torch.nn.Module:
     return model.eval()
 
 
+def test_debugmodel_hf_config(tmp_path):
+    """The converted config exposes per-layer head sizes and the RoPE settings in their transformers 5 form."""
+    # The registry types `.model` as the base `Config`, which declares no `layers`.
+    layers = typing.cast(DomynEdgeModel.Config, model_registry(FLAVOR, max_seq_len=MAX_SEQ_LEN).model).layers
+    config = transformers.AutoConfig.from_pretrained(
+        convert_to_hf(build_titan_model(), tmp_path), trust_remote_code=True
+    )
+
+    head_dims = [layer.attention.head_dim for layer in layers]
+    assert config.head_sizes == head_dims
+    assert [layer_config.head_dim for layer_config in config.per_layer_config] == head_dims
+    # Head sizes live only in `per_layer_config`, with no global `head_dim`.
+    assert "head_dim" not in config.to_dict()
+    # The HF config has a single `rope_parameters`, so every RoPE layer must share one theta.
+    rope_thetas = {layer.attention.rope.theta for layer in layers if layer.attention.use_rope}
+    assert len(rope_thetas) == 1, f"RoPE layers must share one theta. Got {rope_thetas}"
+    assert config.rope_parameters == {"rope_type": "default", "rope_theta": rope_thetas.pop()}
+    assert not hasattr(config, "rope_theta")
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="varlen attention requires a CUDA device")
 @torch.no_grad()
 def test_debugmodel_hf_logits_match(tmp_path):

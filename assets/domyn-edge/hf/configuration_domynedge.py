@@ -1,31 +1,15 @@
 # SPDX-FileCopyrightText: 2026 Domyn
 # SPDX-License-Identifier: Apache-2.0
 
-import transformers
+from transformers.configuration_utils import PreTrainedConfig
+from transformers.modeling_rope_utils import RopeParameters
 
 
-class RopeParameters:
-    def __init__(
-        self,
-        rope_type: str = "default",
-        rope_theta: float = 10_000,
-    ):
-        self.rope_type = rope_type
-        self.rope_theta = rope_theta
-
-
-# to support both transformers > 5 and older
-PretrainedConfig = (
-    transformers.modeling_utils.PreTrainedConfig
-    if hasattr(transformers.modeling_utils, "PreTrainedConfig")
-    else transformers.configuration_utils.PretrainedConfig
-)
-
-
-class DomynEdgeConfig(PretrainedConfig):
+class DomynEdgeConfig(PreTrainedConfig):
     """Configuration of a DomynEdge model, with per-layer position encoding, sliding window and head size."""
 
     model_type: str = "domynedge"
+    default_theta: float = 10_000
 
     def __init__(
         self,
@@ -111,20 +95,24 @@ class DomynEdgeConfig(PretrainedConfig):
         if len(set(rope_dims)) > 1:
             msg = f"All rope layers must have the same head size. Got {rope_dims}"
             raise ValueError(msg)
+
+        kwargs.pop("rope_dim", None)  # derived from rope_dims, never read from config.json. It won't be passed to super
         self.rope_dim = rope_dims[0]
 
-        # Set default rope_parameters if not provided
-        if rope_parameters is None:
-            self.rope_parameters = RopeParameters(
-                rope_type="default",
-                rope_theta=10_000,
-            )
+        # If None, `super().__init__` calls `RotaryEmbeddingConfigMixin.convert_rope_params_to_dict`, which builds
+        # `{"rope_type": "default", "rope_theta": ...}` with the legacy top-level `rope_theta` kwarg if present,
+        # else `default_theta`.
+        self.rope_parameters = rope_parameters
 
         self.pad_token_id = pad_token_id
         self.bos_token_id = bos_token_id
         self.eos_token_id = eos_token_id
         self.tie_word_embeddings = tie_word_embeddings
-        self.rope_parameters = rope_parameters
+
+        if "per_layer_config" not in kwargs:
+            kwargs["per_layer_config"] = {
+                layer_idx: {"head_dim": head_size} for layer_idx, head_size in enumerate(head_sizes)
+            }
 
         super().__init__(**kwargs)
 
