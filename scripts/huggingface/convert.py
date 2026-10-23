@@ -309,7 +309,12 @@ def save_config(console, tokenizer_dir, output_dir, model_name, model_flavor, dt
                 "window_sizes": [(layer.attention.sliding_window_size, 0) for layer in model_config.layers],
                 "head_sizes": [layer.attention.head_dim for layer in model_config.layers],
                 "tie_word_embeddings": True,
-                "rope_theta": model_config.layers[0].attention.rope.theta,
+                "rope_parameters": {
+                    "rope_type": "default",
+                    "rope_theta": float(
+                        next(layer.attention.rope.theta for layer in model_config.layers if layer.attention.use_rope)
+                    ),
+                },
                 "transformers_version": transformers.__version__,
                 "use_cache": True,
                 "vocab_size": resolve_vocab_size(vocab_size, len(tokenizer), None),
