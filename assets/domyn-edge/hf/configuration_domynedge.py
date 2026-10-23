@@ -109,15 +109,10 @@ class DomynEdgeConfig(PreTrainedConfig):
         self.eos_token_id = eos_token_id
         self.tie_word_embeddings = tie_word_embeddings
 
-        self.head_dim = self.rope_dim
         if "per_layer_config" not in kwargs:
-            overrides = {
-                layer_idx: {"head_dim": head_size}
-                for layer_idx, head_size in enumerate(head_sizes)
-                if head_size != self.head_dim
+            kwargs["per_layer_config"] = {
+                layer_idx: {"head_dim": head_size} for layer_idx, head_size in enumerate(head_sizes)
             }
-            if overrides:
-                kwargs["per_layer_config"] = overrides
 
         super().__init__(**kwargs)
 

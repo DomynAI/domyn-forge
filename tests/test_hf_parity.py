@@ -97,7 +97,8 @@ def test_debugmodel_hf_config(tmp_path):
     head_dims = [layer.attention.head_dim for layer in layers]
     assert config.head_sizes == head_dims
     assert [layer_config.head_dim for layer_config in config.per_layer_config] == head_dims
-    assert config.to_dict()["head_dim"] == config.rope_dim
+    # Head sizes live only in `per_layer_config`, with no global `head_dim`.
+    assert "head_dim" not in config.to_dict()
     # The HF config has a single `rope_parameters`, so every RoPE layer must share one theta.
     rope_thetas = {layer.attention.rope.theta for layer in layers if layer.attention.use_rope}
     assert len(rope_thetas) == 1, f"RoPE layers must share one theta. Got {rope_thetas}"
