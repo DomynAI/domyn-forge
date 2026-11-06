@@ -16,8 +16,7 @@ dependencies = [
     "pyarrow",
     # 1.0 pre-releases drop AddedToken, which the pinned torchtitan imports.
     "tokenizers<1.0",
-    "torch==2.16.0.dev20261019+cu130",
-    "triton",
+    # torch and triton come from the `torch-nightly` group (default) or, with vLLM's own torch, the `vllm` group.
     "tyro",
     "click",
     "rich",
@@ -31,6 +30,16 @@ dev = [
     "ruff",
     "pyright[nodejs]>=1.1.414",
     "pyarrow-stubs>=20.0.0.20260819",
+    "accelerate>=1.15.0",
+]
+# For training and the tests.
+torch-nightly = [
+    "torch==2.16.0.dev20261019+cu130",
+    "triton",
+]
+# Serving tests (tests/test_deployed_checkpoint.py): vLLM pins its own torch
+vllm = [
+    "vllm==0.32.0",
 ]
 
 [build-system]
@@ -49,11 +58,14 @@ prerelease = "allow"
 # Node rc for pyright[nodejs]; the stable wheels are the 24.x LTS line.
 constraint-dependencies = ["nodejs-wheel-binaries<25"]
 environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+default-groups = ["dev", "torch-nightly"]
+conflicts = [[{ group = "torch-nightly" }, { group = "vllm" }]]
 
 [tool.uv.sources]
 torchtitan = { git = "https://github.com/pytorch/torchtitan", tag = "v0.3.0" }
-torch = { index = "pytorch-nightly" }
-triton = { index = "pytorch-nightly" }
+# Only the nightly group comes from the nightly index; vLLM's torch comes from PyPI.
+torch = { index = "pytorch-nightly", group = "torch-nightly" }
+triton = { index = "pytorch-nightly", group = "torch-nightly" }
 
 [[tool.uv.index]]
 name = "pytorch-nightly"

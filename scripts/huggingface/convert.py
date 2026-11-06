@@ -285,6 +285,17 @@ def save_config(console, tokenizer_dir, output_dir, model_name, model_flavor, dt
     )
     tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_dir)
 
+    # torchtitan's `sliding_window_size` is a flash-attn left window: that many tokens back plus the current one,
+    # while transformers' `sliding_window` counts the current token too, hence the `+ 1`.
+    sliding_window_sizes = {
+        layer.attention.sliding_window_size
+        for layer in model_config.layers
+        if layer.attention.sliding_window_size != -1
+    }
+    if len(sliding_window_sizes) > 1:
+        msg = f"All sliding window layers must have the same window size. Got {sorted(sliding_window_sizes)}"
+        raise ValueError(msg)
+
     pathlib.Path(output_dir / "config.json").write_text(
         json.dumps(
             {
@@ -306,7 +317,11 @@ def save_config(console, tokenizer_dir, output_dir, model_name, model_flavor, dt
                 "num_key_value_heads": model_config.layers[0].attention.kv_heads,
                 "rms_norm_eps": model_config.layers[0].attention.q_norm.eps,
                 "position_layers": ["rope" if layer.attention.use_rope else "nope" for layer in model_config.layers],
-                "window_sizes": [(layer.attention.sliding_window_size, 0) for layer in model_config.layers],
+                "layer_types": [
+                    "full_attention" if layer.attention.sliding_window_size == -1 else "sliding_attention"
+                    for layer in model_config.layers
+                ],
+                "sliding_window": sliding_window_sizes.pop() + 1 if sliding_window_sizes else None,
                 "head_sizes": [layer.attention.head_dim for layer in model_config.layers],
                 "tie_word_embeddings": True,
                 "rope_parameters": {

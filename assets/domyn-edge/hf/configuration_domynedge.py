@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Domyn
 # SPDX-License-Identifier: Apache-2.0
 
+import typing
+
 from transformers.configuration_utils import PreTrainedConfig
 from transformers.modeling_rope_utils import RopeParameters
 
@@ -8,7 +10,7 @@ from transformers.modeling_rope_utils import RopeParameters
 class DomynEdgeConfig(PreTrainedConfig):
     """Configuration of a DomynEdge model, with per-layer position encoding, sliding window and head size."""
 
-    model_type: str = "domynedge"
+    model_type: typing.ClassVar[str] = "domynedge"
     default_theta: float = 10_000
 
     def __init__(
@@ -30,9 +32,10 @@ class DomynEdgeConfig(PreTrainedConfig):
         attention_bias: bool = False,
         attention_dropout: float = 0.0,
         position_layers: list[str] = ["nope", "nope"] + ["rope", "rope", "rope", "nope"] * 8 + ["nope", "nope"],
-        window_sizes: list[tuple[int, int]] = [(-1, 0), (-1, 0)]
-        + [(1024, 0), (1024, 0), (1024, 0), (-1, 0)] * 8
-        + [(-1, 0), (-1, 0)],
+        layer_types: list[str] = ["full_attention", "full_attention"]
+        + ["sliding_attention", "sliding_attention", "sliding_attention", "full_attention"] * 8
+        + ["full_attention", "full_attention"],
+        sliding_window: int | None = 1025,
         head_sizes: list[int] = [256, 256] + [64, 64, 64, 256] * 8 + [256, 256],
         pad_token_id: int | None = None,
         bos_token_id: int | None = None,
@@ -60,7 +63,8 @@ class DomynEdgeConfig(PreTrainedConfig):
         self.attention_dropout = attention_dropout
 
         self.position_layers = position_layers
-        self.window_sizes = window_sizes
+        self.layer_types = layer_types
+        self.sliding_window = sliding_window
         self.head_sizes = head_sizes
 
         # Validate position_layers
@@ -73,12 +77,15 @@ class DomynEdgeConfig(PreTrainedConfig):
         if any(pl not in ["rope", "nope"] for pl in self.position_layers):
             msg = f"position_layers must be one of 'rope', 'nope'. Got {self.position_layers}"
             raise ValueError(msg)
-        # Validate window_sizes
-        if len(self.window_sizes) != self.num_hidden_layers:
+        # Validate layer_types and sliding_window
+        if len(self.layer_types) != self.num_hidden_layers:
             msg = (
-                f"Length of window_sizes ({len(self.window_sizes)}) "
+                f"Length of layer_types ({len(self.layer_types)}) "
                 f"must be equal to num_hidden_layers ({self.num_hidden_layers})"
             )
+            raise ValueError(msg)
+        if "sliding_attention" in self.layer_types and self.sliding_window is None:
+            msg = "sliding_window must be set when layer_types contains 'sliding_attention'"
             raise ValueError(msg)
         # Validate head_sizes
         if len(head_sizes) != self.num_hidden_layers:
