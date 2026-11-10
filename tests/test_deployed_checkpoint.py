@@ -29,7 +29,14 @@ PROMPTS = [
     + "\nWhat is the code of item 187? Answer with the code only.",
 ]
 MAX_TOKENS = 1024
-MAX_LOGPROB_DRIFT = {"eager": 0.25, "sdpa": 0.25, "flex_attention": 0.25, "torch_varlen": 0.0, "vLLM": 0.25}
+MAX_LOGPROB_DRIFT = {
+    "eager": 0.25,
+    "sdpa": 0.25,
+    "flex_attention": 0.25,
+    "torch_varlen": 0.0,
+    "vLLM transformers": 0.25,
+    "vLLM native": 0.25,
+}
 
 pytestmark = [
     pytest.mark.skipif(not torch.cuda.is_available(), reason="the deployed checkpoint is tested on a CUDA device"),
@@ -209,7 +216,8 @@ def test_hf_sft_completions_match_references(sft_checkpoint_dir, attn_implementa
 
 
 @pytest.mark.parametrize("top_k", [5])
-def test_vllm_sft_completions_match_references(sft_checkpoint_dir, monkeypatch, top_k):
+@pytest.mark.parametrize("model_impl", ["transformers", "vllm"])
+def test_vllm_sft_completions_match_references(sft_checkpoint_dir, monkeypatch, model_impl, top_k):
     """vLLM serves the converted SFT checkpoint with the predictions of the recorded HF completions.
 
     Teacher forcing: given each reference prefix, vLLM's next-token prediction is compared with the recorded one. Then
@@ -225,15 +233,16 @@ def test_vllm_sft_completions_match_references(sft_checkpoint_dir, monkeypatch, 
         model=str(sft_checkpoint_dir),
         trust_remote_code=True,
         dtype="bfloat16",
-        model_impl="transformers",
+        model_impl=model_impl,
         max_model_len=4096,
         enforce_eager=True,
         seed=0,
         # Every position computed from scratch, for the prompt log-probabilities.
         enable_prefix_caching=False,
     )
-    # As vLLM's own tests check: the model runs through the Transformers backend, i.e. our HF modeling.
-    assert llm.llm_engine.model_config.using_transformers_backend()
+    # As vLLM's own tests check: the Transformers backend runs our HF modeling, the native implementation does not.
+    assert llm.llm_engine.model_config.using_transformers_backend() == (model_impl == "transformers")
+    name = "vLLM transformers" if model_impl == "transformers" else "vLLM native"
 
     # Teacher forcing: the prompt and the reference completion as one prompt, with vLLM's log-probabilities of the
     # next token at every position.
@@ -251,7 +260,7 @@ def test_vllm_sft_completions_match_references(sft_checkpoint_dir, monkeypatch, 
             {candidate: logprob.logprob for candidate, logprob in output.prompt_logprobs[start + offset].items()}
             for offset in range(len(reference["completion_token_ids"]))
         ]
-        _assert_teacher_forcing("vLLM", reference, candidates, tokenizer, top_k)
+        _assert_teacher_forcing(name, reference, candidates, tokenizer, top_k)
 
     # vLLM's own greedy completions must give the reference answers.
     generated = llm.generate(
@@ -259,7 +268,7 @@ def test_vllm_sft_completions_match_references(sft_checkpoint_dir, monkeypatch, 
         vllm.SamplingParams(temperature=0.0, max_tokens=references["max_tokens"]),
     )
     for reference, output in zip(references["completions"], generated, strict=True):
-        _assert_answer("vLLM", reference, _reference_answer(reference), output.outputs[0].text)
+        _assert_answer(name, reference, _reference_answer(reference), output.outputs[0].text)
 
 
 @torch.no_grad()
