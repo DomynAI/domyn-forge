@@ -39,7 +39,7 @@ torch-nightly = [
 ]
 # Serving tests (tests/test_deployed_checkpoint.py): vLLM pins its own torch
 vllm = [
-    "vllm==0.32.0",
+    "vllm==0.33.0",
 ]
 
 [build-system]

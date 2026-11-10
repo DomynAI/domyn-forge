@@ -49,7 +49,9 @@ class DomynEdgeConfig(PreTrainedConfig):
         self.intermediate_size = intermediate_size
         self.num_hidden_layers = num_hidden_layers
         self.num_attention_heads = num_attention_heads
-        self.max_window_layers = max_window_layers
+        # TODO: remove once vLLM's native DomynEdge no longer requires it. It was used by Qwen2 `max_window_layers`
+        # but in Domyn Edge `layer_types` alone decides which layers slide.
+        self.max_window_layers = num_hidden_layers if max_window_layers is None else max_window_layers
 
         # for backward compatibility
         if num_key_value_heads is None:
@@ -104,6 +106,7 @@ class DomynEdgeConfig(PreTrainedConfig):
             raise ValueError(msg)
 
         kwargs.pop("rope_dim", None)  # derived from rope_dims, never read from config.json. It won't be passed to super
+        kwargs.pop("window_sizes", None)  # derived from layer_types, see the `window_sizes` property
         self.rope_dim = rope_dims[0]
 
         # If None, `super().__init__` calls `RotaryEmbeddingConfigMixin.convert_rope_params_to_dict`, which builds
@@ -122,6 +125,17 @@ class DomynEdgeConfig(PreTrainedConfig):
             }
 
         super().__init__(**kwargs)
+
+    @property
+    def window_sizes(self) -> list[tuple[int, int]]:
+        """The torchtitan (left, right) attention window of each layer, (-1, 0) for full attention.
+
+        Legacy implementation to be compatible with vLLM v0.33, to be removed when updated from vLLM side.
+        """
+        return [
+            (self.sliding_window - 1, 0) if layer_type == "sliding_attention" and self.sliding_window else (-1, 0)
+            for layer_type in self.layer_types
+        ]
 
 
 __all__ = ["DomynEdgeConfig"]
