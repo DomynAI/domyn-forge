@@ -1,0 +1,20 @@
+{"id":"arithmetic","prefix":"The sum of two and two is","continuation":" four."}
+{"id":"geography","prefix":"The capital of France is","continuation":" Paris."}
+{"id":"unit_conversion","prefix":"One kilometer is equal to","continuation":" one thousand meters."}
+{"id":"reading","prefix":"Mina put a red notebook on her desk. The color of the notebook was","continuation":" red."}
+{"id":"python","prefix":"In Python, the built-in function that returns the length of a list is","continuation":" len()."}
+{"id":"python_return","prefix":"def square(x):\n    return","continuation":" x * x"}
+{"id":"italian","prefix":"La capitale d'Italia è","continuation":" Roma."}
+{"id":"spanish","prefix":"La capital de España es","continuation":" Madrid."}
+{"id":"german","prefix":"Die Hauptstadt von Deutschland ist","continuation":" Berlin."}
+{"id":"french","prefix":"L'eau gèle à zéro degré","continuation":" Celsius."}
+{"id":"retrieval_sentence","prefix":"A blue envelope contains the train ticket, and a white envelope contains the receipt. To board the train, take","continuation":" the blue envelope, because it contains the ticket. The white envelope contains only the receipt."}
+{"id":"math_explanation","prefix":"A shop has six boxes with eight cups in each box. How many cups are there? There are","continuation":" forty-eight cups. Multiplying the number of boxes by the number of cups per box gives 6 × 8 = 48."}
+{"id":"temperature","prefix":"Water expands as it freezes. This explains why","continuation":" a glass bottle filled to the top with water can crack in a freezer. The ice takes up more volume than the liquid water."}
+{"id":"python_order","prefix":"def largest(values):\n    if not values:\n        raise ValueError(\"empty list\")\n    return","continuation":" max(values)\n\n# max returns the largest element in the input list."}
+{"id":"python_deduplicate","prefix":"To remove duplicates from a Python list without changing the order of the first occurrences, use","continuation":" list(dict.fromkeys(values)). A dictionary preserves insertion order, so the first occurrence determines each element's position."}
+{"id":"measurement","prefix":"When measuring inference performance, time to first token measures","continuation":" the delay before the first token is emitted. Decode throughput measures how many output tokens the model generates per second after generation begins."}
+{"id":"italian_sentence","prefix":"Per preparare il tè, prima si scalda l'acqua e poi","continuation":" si lascia la bustina in infusione per alcuni minuti. La durata dipende dal tipo di tè e dal gusto personale."}
+{"id":"spanish_sentence","prefix":"Si el tren sale a las ocho y el viaje dura dos horas, llegará","continuation":" a las diez. Es importante comprobar si el horario indica la hora local del destino."}
+{"id":"german_sentence","prefix":"Wenn man eine Datei lokal speichert, befindet sie sich","continuation":" auf dem eigenen Gerät. Man kann sie auch ohne Internetverbindung öffnen, sofern das passende Programm installiert ist."}
+{"id":"french_sentence","prefix":"Pour lire un livre dans une bibliothèque, il faut d'abord","continuation":" trouver le livre dans le catalogue ou sur les rayons. On peut ensuite le consulter sur place ou l'emprunter."}

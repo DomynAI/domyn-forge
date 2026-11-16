@@ -1,0 +1,338 @@
+{
+  "description": "Mac CPU latency from benchmark_cpu; warm_median is the median of the runs after the first.",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "runtime": "litert-lm 0.19.1",
+  "backend": "cpu",
+  "results": [
+    {
+      "bundle": "candidate",
+      "bundle_sha256": "31425c2ce528f08cb24748add0da99dadf2106437843252467017464c670ea18",
+      "bundle_bytes": 2520888320,
+      "context": 1024,
+      "prefill": 128,
+      "decode": 64,
+      "threads": 2,
+      "warm_median": {
+        "init_time_in_second": 3.416812585,
+        "time_to_first_token_in_second": 2.049241143,
+        "last_prefill_token_count": 128,
+        "last_prefill_tokens_per_second": 64.44099661170952,
+        "last_decode_token_count": 64,
+        "last_decode_tokens_per_second": 15.83667260256664
+      },
+      "runs": [
+        {
+          "index": 0,
+          "init_time_in_second": 3.4161847510000003,
+          "time_to_first_token_in_second": 5.107365302000001,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 25.384763433620474,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.39160836207978
+        },
+        {
+          "index": 1,
+          "init_time_in_second": 3.416812585,
+          "time_to_first_token_in_second": 2.06111848175,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 64.09710442111961,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.588853885486925
+        },
+        {
+          "index": 2,
+          "init_time_in_second": 3.416186085,
+          "time_to_first_token_in_second": 2.01957766025,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 65.42518684243697,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.83667260256664
+        },
+        {
+          "index": 3,
+          "init_time_in_second": 3.4168989180000002,
+          "time_to_first_token_in_second": 2.049241143,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 64.44099661170952,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.8911829713484
+        }
+      ]
+    },
+    {
+      "bundle": "candidate",
+      "bundle_sha256": "31425c2ce528f08cb24748add0da99dadf2106437843252467017464c670ea18",
+      "bundle_bytes": 2520888320,
+      "context": 1024,
+      "prefill": 768,
+      "decode": 64,
+      "threads": 2,
+      "warm_median": {
+        "init_time_in_second": 3.2051901669999996,
+        "time_to_first_token_in_second": 11.89080094475,
+        "last_prefill_token_count": 768,
+        "last_prefill_tokens_per_second": 64.93257151048387,
+        "last_decode_token_count": 64,
+        "last_decode_tokens_per_second": 15.836120732041774
+      },
+      "runs": [
+        {
+          "index": 0,
+          "init_time_in_second": 3.204953,
+          "time_to_first_token_in_second": 12.365760977,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 62.432805854368105,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.495262956356799
+        },
+        {
+          "index": 1,
+          "init_time_in_second": 3.205882334,
+          "time_to_first_token_in_second": 11.86495477175,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 65.0711747942221,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 16.001583820764996
+        },
+        {
+          "index": 2,
+          "init_time_in_second": 3.2051901669999996,
+          "time_to_first_token_in_second": 11.917066152750001,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 64.79080552666414,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.739999638388264
+        },
+        {
+          "index": 3,
+          "init_time_in_second": 3.2050724579999996,
+          "time_to_first_token_in_second": 11.89080094475,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 64.93257151048387,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.836120732041774
+        }
+      ]
+    },
+    {
+      "bundle": "v5",
+      "bundle_sha256": "7f4ae4cfedafb6a6ef2db84245eb1df767c2f7badf1dd2c939058913a54bdd0e",
+      "bundle_bytes": 2823549952,
+      "context": 1024,
+      "prefill": 128,
+      "decode": 64,
+      "threads": 2,
+      "warm_median": {
+        "init_time_in_second": 4.771049916,
+        "time_to_first_token_in_second": 2.0729409952499998,
+        "last_prefill_token_count": 128,
+        "last_prefill_tokens_per_second": 63.72717202770465,
+        "last_decode_token_count": 64,
+        "last_decode_tokens_per_second": 15.375425396759333
+      },
+      "runs": [
+        {
+          "index": 0,
+          "init_time_in_second": 4.771089707000001,
+          "time_to_first_token_in_second": 4.735171927,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 27.40009758574724,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.709507801439514
+        },
+        {
+          "index": 1,
+          "init_time_in_second": 4.771101207,
+          "time_to_first_token_in_second": 2.04593255875,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 64.61729848656776,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.375425396759333
+        },
+        {
+          "index": 2,
+          "init_time_in_second": 4.7710134150000005,
+          "time_to_first_token_in_second": 2.0729409952499998,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 63.72717202770465,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.533107003602526
+        },
+        {
+          "index": 3,
+          "init_time_in_second": 4.771049916,
+          "time_to_first_token_in_second": 2.076370578,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 63.705489521940066,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 14.897672774014175
+        }
+      ]
+    },
+    {
+      "bundle": "v5",
+      "bundle_sha256": "7f4ae4cfedafb6a6ef2db84245eb1df767c2f7badf1dd2c939058913a54bdd0e",
+      "bundle_bytes": 2823549952,
+      "context": 1024,
+      "prefill": 768,
+      "decode": 64,
+      "threads": 2,
+      "warm_median": {
+        "init_time_in_second": 4.56503125,
+        "time_to_first_token_in_second": 11.93127295175,
+        "last_prefill_token_count": 768,
+        "last_prefill_tokens_per_second": 64.72723475518757,
+        "last_decode_token_count": 64,
+        "last_decode_tokens_per_second": 15.641029733761755
+      },
+      "runs": [
+        {
+          "index": 0,
+          "init_time_in_second": 4.564301458,
+          "time_to_first_token_in_second": 14.6076377775,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 52.80375778371298,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.818189357840886
+        },
+        {
+          "index": 1,
+          "init_time_in_second": 4.565211542000001,
+          "time_to_first_token_in_second": 11.93127295175,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 64.72723475518757,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.129176274454984
+        },
+        {
+          "index": 2,
+          "init_time_in_second": 4.56503125,
+          "time_to_first_token_in_second": 12.03294496725,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 64.15877447305407,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.963855667665962
+        },
+        {
+          "index": 3,
+          "init_time_in_second": 4.564946667,
+          "time_to_first_token_in_second": 11.8812954095,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 64.98912912959162,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 15.641029733761755
+        }
+      ]
+    },
+    {
+      "bundle": "qwen3-4b",
+      "bundle_sha256": "4877b236f09c0b519958612afeb3c6fc6575c7ce56080d0d3a5406150e0ff9ce",
+      "bundle_bytes": 2272935936,
+      "context": 1024,
+      "prefill": 128,
+      "decode": 64,
+      "threads": 2,
+      "warm_median": {
+        "init_time_in_second": 3.440514209,
+        "time_to_first_token_in_second": 1.99417561475,
+        "last_prefill_token_count": 128,
+        "last_prefill_tokens_per_second": 65.6819983073513,
+        "last_decode_token_count": 64,
+        "last_decode_tokens_per_second": 22.14730364613427
+      },
+      "runs": [
+        {
+          "index": 0,
+          "init_time_in_second": 3.440346791,
+          "time_to_first_token_in_second": 4.24932627875,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 30.444595451963515,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.238248107618382
+        },
+        {
+          "index": 1,
+          "init_time_in_second": 3.4408410839999997,
+          "time_to_first_token_in_second": 1.97927876525,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 66.17974430341073,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.14730364613427
+        },
+        {
+          "index": 2,
+          "init_time_in_second": 3.4403440419999995,
+          "time_to_first_token_in_second": 1.99417561475,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 65.6819983073513,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.03029822646716
+        },
+        {
+          "index": 3,
+          "init_time_in_second": 3.440514209,
+          "time_to_first_token_in_second": 2.00690595,
+          "last_prefill_token_count": 128,
+          "last_prefill_tokens_per_second": 65.2274557080058,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.450661601703864
+        }
+      ]
+    },
+    {
+      "bundle": "qwen3-4b",
+      "bundle_sha256": "4877b236f09c0b519958612afeb3c6fc6575c7ce56080d0d3a5406150e0ff9ce",
+      "bundle_bytes": 2272935936,
+      "context": 1024,
+      "prefill": 768,
+      "decode": 64,
+      "threads": 2,
+      "warm_median": {
+        "init_time_in_second": 3.506709793,
+        "time_to_first_token_in_second": 11.6538480685,
+        "last_prefill_token_count": 768,
+        "last_prefill_tokens_per_second": 66.15264615239843,
+        "last_decode_token_count": 64,
+        "last_decode_tokens_per_second": 22.555465853564304
+      },
+      "runs": [
+        {
+          "index": 0,
+          "init_time_in_second": 3.5067060430000003,
+          "time_to_first_token_in_second": 12.07540552075,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 63.834967771675146,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.531667218826883
+        },
+        {
+          "index": 1,
+          "init_time_in_second": 3.5067092509999997,
+          "time_to_first_token_in_second": 11.677381632500001,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 66.01643179313629,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.771604642451592
+        },
+        {
+          "index": 2,
+          "init_time_in_second": 3.5070522519999994,
+          "time_to_first_token_in_second": 11.62850274725,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 66.29987569744497,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.336075449788687
+        },
+        {
+          "index": 3,
+          "init_time_in_second": 3.506709793,
+          "time_to_first_token_in_second": 11.6538480685,
+          "last_prefill_token_count": 768,
+          "last_prefill_tokens_per_second": 66.15264615239843,
+          "last_decode_token_count": 64,
+          "last_decode_tokens_per_second": 22.555465853564304
+        }
+      ]
+    }
+  ]
+}

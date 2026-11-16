@@ -1,0 +1,199 @@
+{
+  "description": "PIQA validation subsets scored by evaluate_piqa and compared with summarize_results piqa. bf16 is the staged source checkpoint, v5 the export without --compact-prefill-mask, candidate the released candidate.",
+  "subsets": [
+    {
+      "settings": {
+        "dataset_sha256": "61533005e22f175534909b1ec8eacb6da03c233933558d1bafb15787453b1f55",
+        "start": 0,
+        "examples": 50,
+        "context": 512
+      },
+      "matched_rows": 50,
+      "models": {
+        "bf16": {
+          "raw": 38,
+          "length_normalized": 39
+        },
+        "v5": {
+          "raw": 35,
+          "length_normalized": 39
+        },
+        "candidate": {
+          "raw": 35,
+          "length_normalized": 39
+        }
+      },
+      "paired": [
+        {
+          "reference": "bf16",
+          "candidate": "v5",
+          "metric": "raw",
+          "candidate_only": 0,
+          "reference_only": 3,
+          "delta_points": -6.0,
+          "interval_95_points": [
+            -14.000000000000002,
+            0
+          ]
+        },
+        {
+          "reference": "bf16",
+          "candidate": "v5",
+          "metric": "length_normalized",
+          "candidate_only": 1,
+          "reference_only": 1,
+          "delta_points": 0,
+          "interval_95_points": [
+            -6.0,
+            6.0
+          ]
+        },
+        {
+          "reference": "bf16",
+          "candidate": "candidate",
+          "metric": "raw",
+          "candidate_only": 0,
+          "reference_only": 3,
+          "delta_points": -6.0,
+          "interval_95_points": [
+            -14.000000000000002,
+            0
+          ]
+        },
+        {
+          "reference": "bf16",
+          "candidate": "candidate",
+          "metric": "length_normalized",
+          "candidate_only": 1,
+          "reference_only": 1,
+          "delta_points": 0,
+          "interval_95_points": [
+            -6.0,
+            6.0
+          ]
+        },
+        {
+          "reference": "v5",
+          "candidate": "candidate",
+          "metric": "raw",
+          "candidate_only": 0,
+          "reference_only": 0,
+          "delta_points": 0,
+          "interval_95_points": [
+            0,
+            0
+          ]
+        },
+        {
+          "reference": "v5",
+          "candidate": "candidate",
+          "metric": "length_normalized",
+          "candidate_only": 0,
+          "reference_only": 0,
+          "delta_points": 0,
+          "interval_95_points": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "settings": {
+        "dataset_sha256": "61533005e22f175534909b1ec8eacb6da03c233933558d1bafb15787453b1f55",
+        "start": 50,
+        "examples": 100,
+        "context": 1024
+      },
+      "matched_rows": 100,
+      "models": {
+        "bf16": {
+          "raw": 71,
+          "length_normalized": 80
+        },
+        "v5": {
+          "raw": 71,
+          "length_normalized": 77
+        },
+        "candidate": {
+          "raw": 71,
+          "length_normalized": 77
+        }
+      },
+      "paired": [
+        {
+          "reference": "bf16",
+          "candidate": "v5",
+          "metric": "raw",
+          "candidate_only": 2,
+          "reference_only": 2,
+          "delta_points": 0,
+          "interval_95_points": [
+            -4.0,
+            4.0
+          ]
+        },
+        {
+          "reference": "bf16",
+          "candidate": "v5",
+          "metric": "length_normalized",
+          "candidate_only": 2,
+          "reference_only": 5,
+          "delta_points": -3.0,
+          "interval_95_points": [
+            -8.0,
+            2.0
+          ]
+        },
+        {
+          "reference": "bf16",
+          "candidate": "candidate",
+          "metric": "raw",
+          "candidate_only": 2,
+          "reference_only": 2,
+          "delta_points": 0,
+          "interval_95_points": [
+            -4.0,
+            4.0
+          ]
+        },
+        {
+          "reference": "bf16",
+          "candidate": "candidate",
+          "metric": "length_normalized",
+          "candidate_only": 2,
+          "reference_only": 5,
+          "delta_points": -3.0,
+          "interval_95_points": [
+            -8.0,
+            2.0
+          ]
+        },
+        {
+          "reference": "v5",
+          "candidate": "candidate",
+          "metric": "raw",
+          "candidate_only": 0,
+          "reference_only": 0,
+          "delta_points": 0,
+          "interval_95_points": [
+            0,
+            0
+          ]
+        },
+        {
+          "reference": "v5",
+          "candidate": "candidate",
+          "metric": "length_normalized",
+          "candidate_only": 0,
+          "reference_only": 0,
+          "delta_points": 0,
+          "interval_95_points": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}
