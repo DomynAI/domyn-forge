@@ -1,0 +1,172 @@
+{
+  "task": "gsm8k",
+  "settings": {
+    "task": "gsm8k",
+    "dataset_sha256": "752adc99f23132275139f1f7be57126b08735a55daf0c56859ee6df70abafbac",
+    "context": 2048,
+    "output_tokens": 512,
+    "seed": 42,
+    "scorer": "gsm8k-final-marker",
+    "thinking": false,
+    "gsm8k_prompt": "solve"
+  },
+  "provenance": {
+    "bf16": {
+      "model_sha256": {
+        "model-00001-of-00001.safetensors": "4165d20e57a8f6b6c3349644a5c76cb5fbfbe94b20e958a45af64420128d5e77"
+      },
+      "backend": "mps",
+      "runtime": "2.15.0",
+      "transformers": "5.23.0"
+    },
+    "candidate": {
+      "model_sha256": {
+        "model.litertlm": "31425c2ce528f08cb24748add0da99dadf2106437843252467017464c670ea18"
+      },
+      "backend": "litert-cpu",
+      "runtime": "0.19.1",
+      "transformers": null
+    },
+    "qwen3-4b": {
+      "model_sha256": {
+        "qwen3_4b_mixed_int4.litertlm": "4877b236f09c0b519958612afeb3c6fc6575c7ce56080d0d3a5406150e0ff9ce"
+      },
+      "backend": "litert-cpu",
+      "runtime": "0.19.1",
+      "transformers": null
+    }
+  },
+  "completed_rows": {
+    "bf16": 1319,
+    "candidate": 1319,
+    "qwen3-4b": 1319
+  },
+  "matched_rows": 1319,
+  "models": {
+    "bf16": {
+      "correct": 1176,
+      "hit_output_cap": 26,
+      "valid_format": 1288
+    },
+    "candidate": {
+      "correct": 1122,
+      "hit_output_cap": 43,
+      "valid_format": 1257
+    },
+    "qwen3-4b": {
+      "correct": 1110,
+      "hit_output_cap": 14,
+      "valid_format": 1218
+    }
+  },
+  "paired": [
+    {
+      "reference": "bf16",
+      "candidate": "candidate",
+      "metric": "correct",
+      "candidate_only": 42,
+      "reference_only": 96,
+      "delta_points": -4.094010614101592,
+      "interval_95_points": [
+        -5.837755875663381,
+        -2.350265352539803
+      ]
+    },
+    {
+      "reference": "bf16",
+      "candidate": "candidate",
+      "metric": "hit_output_cap",
+      "candidate_only": 30,
+      "reference_only": 13,
+      "delta_points": 1.288855193328279,
+      "interval_95_points": [
+        0.3032600454890068,
+        2.2744503411675514
+      ]
+    },
+    {
+      "reference": "bf16",
+      "candidate": "candidate",
+      "metric": "valid_format",
+      "candidate_only": 15,
+      "reference_only": 46,
+      "delta_points": -2.350265352539803,
+      "interval_95_points": [
+        -3.4874905231235784,
+        -1.2130401819560273
+      ]
+    },
+    {
+      "reference": "bf16",
+      "candidate": "qwen3-4b",
+      "metric": "correct",
+      "candidate_only": 74,
+      "reference_only": 140,
+      "delta_points": -5.003790750568612,
+      "interval_95_points": [
+        -7.202426080363912,
+        -2.8809704321455647
+      ]
+    },
+    {
+      "reference": "bf16",
+      "candidate": "qwen3-4b",
+      "metric": "hit_output_cap",
+      "candidate_only": 9,
+      "reference_only": 21,
+      "delta_points": -0.9097801364670205,
+      "interval_95_points": [
+        -1.7437452615617892,
+        -0.0758150113722517
+      ]
+    },
+    {
+      "reference": "bf16",
+      "candidate": "qwen3-4b",
+      "metric": "valid_format",
+      "candidate_only": 22,
+      "reference_only": 92,
+      "delta_points": -5.307050796057619,
+      "interval_95_points": [
+        -6.899166034874906,
+        -3.7149355572403335
+      ]
+    },
+    {
+      "reference": "candidate",
+      "candidate": "qwen3-4b",
+      "metric": "correct",
+      "candidate_only": 102,
+      "reference_only": 114,
+      "delta_points": -0.9097801364670205,
+      "interval_95_points": [
+        -3.10841546626232,
+        1.288855193328279
+      ]
+    },
+    {
+      "reference": "candidate",
+      "candidate": "qwen3-4b",
+      "metric": "hit_output_cap",
+      "candidate_only": 9,
+      "reference_only": 38,
+      "delta_points": -2.1986353297952994,
+      "interval_95_points": [
+        -3.2600454890068233,
+        -1.2130401819560273
+      ]
+    },
+    {
+      "reference": "candidate",
+      "candidate": "qwen3-4b",
+      "metric": "valid_format",
+      "candidate_only": 43,
+      "reference_only": 82,
+      "delta_points": -2.9567854435178167,
+      "interval_95_points": [
+        -4.624715693707354,
+        -1.288855193328279
+      ]
+    }
+  ]
+}

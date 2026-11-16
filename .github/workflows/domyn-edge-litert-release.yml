@@ -1,0 +1,86 @@
+name: Domyn Edge LiteRT release candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      checkpoint_revision:
+        description: Full Hugging Face commit SHA for domyn/Domyn-Edge-SFT
+        required: true
+        default: bfdad8935eede2977b2293b9754597529b21e55c
+      max_nll_increase:
+        # The qualified candidate measured 0.102 (scripts/litert/evidence/mac-cpu-quality.jsonl).
+        description: Maximum allowed continuation NLL increase in nats per token over the BF16 source
+        required: true
+        default: 0.15
+        type: number
+
+permissions:
+  contents: read
+
+# One export at a time: each needs most of the runner's RAM and disk.
+concurrency:
+  group: domyn-edge-litert-release
+  cancel-in-progress: false
+
+jobs:
+  export:
+    # A dedicated native Linux runner with Docker, at least 32 GiB of RAM and
+    # at least 50 GiB of available disk for the image and export workspace.
+    runs-on: [self-hosted, linux, x64, domyn-litert]
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: litert-${{ github.run_id }}-${{ github.run_attempt }}
+    env:
+      CHECKPOINT_REVISION: ${{ inputs.checkpoint_revision }}
+      MAX_NLL_INCREASE: ${{ inputs.max_nll_increase }}
+      IMAGE: domyn-litert-ci:${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: litert-${{ github.run_id }}-${{ github.run_attempt }}
+          clean: false
+          persist-credentials: false
+      - name: Build toolchain and record inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$CHECKPOINT_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Use a full Hugging Face checkpoint commit SHA" >&2
+            exit 2
+          fi
+          mkdir release-run release-run/tmp
+          docker build --platform linux/amd64 -f scripts/litert/release.Dockerfile -t "$IMAGE" scripts/litert
+          git rev-parse HEAD > release-run/forge-revision.txt
+          printf '%s\n' "$CHECKPOINT_REVISION" > release-run/checkpoint-revision.txt
+          docker image inspect --format '{{.Id}}' "$IMAGE" > release-run/toolchain-image.txt
+      - name: Download the pinned checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --user "$(id -u):$(id -g)" --cpus 4 --memory 8g \
+            --mount "type=bind,source=$PWD/release-run,target=/run-output" \
+            --env HF_HOME=/run-output/hf-cache --env TMPDIR=/run-output/tmp \
+            "$IMAGE" \
+            hf download domyn/Domyn-Edge-SFT --revision "$CHECKPOINT_REVISION" \
+            --include '*.safetensors' '*.json' '*.jinja' '*.py' --local-dir /run-output/source
+      - name: Export and validate offline
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --network none --user "$(id -u):$(id -g)" --cpus 8 --memory 28g --memory-swap 28g \
+            --mount "type=bind,source=$PWD,target=/workspace,readonly" \
+            --mount "type=bind,source=$PWD/release-run,target=/workspace/release-run" \
+            --env HF_HOME=/workspace/release-run/hf-cache \
+            --env TMPDIR=/workspace/release-run/tmp --env HF_HUB_OFFLINE=1 \
+            "$IMAGE" bash scripts/litert/release.sh release-run/source release-run "$MAX_NLL_INCREASE"
+      - name: Retain qualification reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: domyn-litert-reports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            litert-${{ github.run_id }}-${{ github.run_attempt }}/release-run/*.txt
+            litert-${{ github.run_id }}-${{ github.run_attempt }}/release-run/*.json
+            litert-${{ github.run_id }}-${{ github.run_attempt }}/release-run/*.jsonl
+          if-no-files-found: warn

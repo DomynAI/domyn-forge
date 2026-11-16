@@ -39,6 +39,7 @@ tested on the [Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/) H
 | 📦 **Data** | A map-style dataloader for pretokenized `*.arrow` shards: memory-mapped, shuffled, exactly resumable from checkpoints, with per-role loss masking for fine-tuning. |
 | 🚀 **Training** | Example files to launch on one node with [`train.sh`](scripts/launch/train.sh) or on several with Slurm through [`train.sbatch`](scripts/launch/train.sbatch). |
 | 🤗 **Export** | Conversion from TorchTitan checkpoints to Hugging Face format, with the modeling code, and a generation script to try the result. |
+| 📱 **On-device** | Export of Domyn-Edge-SFT to a 2.35 GiB INT4 [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) bundle for CPU inference on edge devices, tested offline on an Android phone's CPU, with parity, quality and latency checks ([scripts/litert/README.md](scripts/litert/README.md)). |
 | ✅ **Tests** | CPU unit tests for the model, adapter and dataloader, plus GPU and 4-GPU integration tests ([tests/README.md](tests/README.md)). |
 
 ---

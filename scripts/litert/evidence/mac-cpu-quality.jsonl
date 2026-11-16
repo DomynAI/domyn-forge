@@ -1,0 +1,22 @@
+{"kind": "config", "description": "compare_quality on quality_cases.jsonl: BF16 staged source (CPU) vs. the candidate bundle (LiteRT-LM 0.19.1 CPU, macOS arm64), 512-token context.", "bundle_sha256": "31425c2ce528f08cb24748add0da99dadf2106437843252467017464c670ea18"}
+{"case": "arithmetic", "tokens": 2, "source_nll": 1.2182105779647827, "bundle_nll": 1.269736886024475}
+{"case": "geography", "tokens": 2, "source_nll": 1.0228561162948608, "bundle_nll": 2.177295684814453}
+{"case": "unit_conversion", "tokens": 4, "source_nll": 4.964814186096191, "bundle_nll": 4.311746597290039}
+{"case": "reading", "tokens": 2, "source_nll": 0.7143046855926514, "bundle_nll": 1.3985953330993652}
+{"case": "python", "tokens": 2, "source_nll": 5.1757636070251465, "bundle_nll": 4.738729953765869}
+{"case": "python_return", "tokens": 3, "source_nll": 0.7181901931762695, "bundle_nll": 0.5646341443061829}
+{"case": "italian", "tokens": 2, "source_nll": 2.1230056285858154, "bundle_nll": 2.527709484100342}
+{"case": "spanish", "tokens": 2, "source_nll": 2.966233253479004, "bundle_nll": 3.723217487335205}
+{"case": "german", "tokens": 2, "source_nll": 1.1457109451293945, "bundle_nll": 1.6073338985443115}
+{"case": "french", "tokens": 2, "source_nll": 1.7932755947113037, "bundle_nll": 1.8086611032485962}
+{"case": "retrieval_sentence", "tokens": 18, "source_nll": 19.974802017211914, "bundle_nll": 23.38220977783203}
+{"case": "math_explanation", "tokens": 28, "source_nll": 29.35354995727539, "bundle_nll": 31.21340560913086}
+{"case": "temperature", "tokens": 26, "source_nll": 53.47414779663086, "bundle_nll": 52.556583404541016}
+{"case": "python_order", "tokens": 14, "source_nll": 34.010982513427734, "bundle_nll": 34.216835021972656}
+{"case": "python_deduplicate", "tokens": 22, "source_nll": 55.015071868896484, "bundle_nll": 56.40604782104492}
+{"case": "measurement", "tokens": 25, "source_nll": 73.52154541015625, "bundle_nll": 67.85481262207031}
+{"case": "italian_sentence", "tokens": 30, "source_nll": 45.276145935058594, "bundle_nll": 49.125083923339844}
+{"case": "spanish_sentence", "tokens": 20, "source_nll": 48.87831115722656, "bundle_nll": 52.81019592285156}
+{"case": "german_sentence", "tokens": 27, "source_nll": 60.57774353027344, "bundle_nll": 68.53888702392578}
+{"case": "french_sentence", "tokens": 26, "source_nll": 48.656898498535156, "bundle_nll": 56.78501510620117}
+{"scored_tokens": 259, "source_nll_per_token": 1.8941373107055899, "bundle_nll_per_token": 1.996203617009417, "nll_delta": 0.10206630630382718, "source_perplexity": 6.64681179715436, "bundle_perplexity": 7.361057592194994}

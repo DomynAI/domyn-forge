@@ -1,0 +1,468 @@
+{
+  "device": "Android 16 phone, Snapdragon 8 Gen 2 (arm64), 8 GB RAM",
+  "bundle_sha256": "31425c2ce528f08cb24748add0da99dadf2106437843252467017464c670ea18",
+  "native_runner": {
+    "name": "litert_lm_advanced_main",
+    "architecture": "android_arm64",
+    "gcs_object_generation": "1793238236151134",
+    "sha256": "8e199c6b3fb438cb94943567a279f9e1f994d57c3e1f4667084fc8ae2d06a6eb"
+  },
+  "candidate_bundle_bytes": 2520888320,
+  "gallery_xnnpack_cache_bytes": 2219526344,
+  "offline_gallery_retrieval": {
+    "device": "Android 16 phone, Snapdragon 8 Gen 2 (arm64), 8 GB RAM",
+    "gallery": "1.0.23",
+    "backend": "CPU",
+    "bundle_sha256": "31425c2ce528f08cb24748add0da99dadf2106437843252467017464c670ea18",
+    "max_tokens": 2048,
+    "top_k": 1,
+    "expected": "71150",
+    "reply": "71150",
+    "input_tokens_reported": 1909,
+    "output_tokens_reported": 6,
+    "time_to_first_token_ms": 134863,
+    "decode_tokens_per_second_displayed": 0.2,
+    "context_warning_shown": true,
+    "network": "Airplane mode on; Wi-Fi off; no active default network at preflight or postflight"
+  },
+  "runtime_limit_comparison": {
+    "device": "Android 16 phone, Snapdragon 8 Gen 2 (arm64), 8 GB RAM",
+    "backend": "LiteRT-LM CPU",
+    "threads": 2,
+    "input_tokens": 768,
+    "output_tokens": 16,
+    "medians": {
+      "1024": {
+        "time_to_first_token_s": 42.805,
+        "decode_tokens_per_s": 4.279999999999999,
+        "runner_peak_ram_mb": 3203.74,
+        "sample_peak_swap_kib": 78214.0
+      },
+      "2048": {
+        "time_to_first_token_s": 50.75,
+        "decode_tokens_per_s": 2.3,
+        "runner_peak_ram_mb": 3544.44,
+        "sample_peak_swap_kib": 578060.0
+      }
+    },
+    "trials": [
+      {
+        "pair": 1,
+        "runtime_token_limit": 1024,
+        "runtime_limit_reported": 1024,
+        "graph_context_limit": 1024,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 34.48,
+        "prefill_tokens_per_s": 22.43,
+        "decode_tokens_per_s": 4.22,
+        "runner_peak_ram_mb": 3095.26,
+        "sample_peak_rss_kib": 3138884,
+        "sample_peak_swap_kib": 82052,
+        "sample_major_faults": 26172,
+        "sample_min_system_available_kib": 2377584,
+        "thermal_status_before_after": [
+          0,
+          0
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "pair": 1,
+        "runtime_token_limit": 2048,
+        "runtime_limit_reported": 2048,
+        "graph_context_limit": 2048,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 47.14,
+        "prefill_tokens_per_s": 16.44,
+        "decode_tokens_per_s": 2.28,
+        "runner_peak_ram_mb": 3453.1,
+        "sample_peak_rss_kib": 3535976,
+        "sample_peak_swap_kib": 652848,
+        "sample_major_faults": 36052,
+        "sample_min_system_available_kib": 2546656,
+        "thermal_status_before_after": [
+          0,
+          0
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "pair": 2,
+        "runtime_token_limit": 1024,
+        "runtime_limit_reported": 1024,
+        "graph_context_limit": 1024,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 41.36,
+        "prefill_tokens_per_s": 18.7,
+        "decode_tokens_per_s": 3.51,
+        "runner_peak_ram_mb": 3318.02,
+        "sample_peak_rss_kib": 3314164,
+        "sample_peak_swap_kib": 972,
+        "sample_major_faults": 3519,
+        "sample_min_system_available_kib": 2998564,
+        "thermal_status_before_after": [
+          1,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "pair": 2,
+        "runtime_token_limit": 2048,
+        "runtime_limit_reported": 2048,
+        "graph_context_limit": 2048,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 47.13,
+        "prefill_tokens_per_s": 16.44,
+        "decode_tokens_per_s": 2.43,
+        "runner_peak_ram_mb": 3541.02,
+        "sample_peak_rss_kib": 3626000,
+        "sample_peak_swap_kib": 440844,
+        "sample_major_faults": 53675,
+        "sample_min_system_available_kib": 2618480,
+        "thermal_status_before_after": [
+          0,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "pair": 3,
+        "runtime_token_limit": 1024,
+        "runtime_limit_reported": 1024,
+        "graph_context_limit": 1024,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 44.25,
+        "prefill_tokens_per_s": 17.44,
+        "decode_tokens_per_s": 4.66,
+        "runner_peak_ram_mb": 3064.58,
+        "sample_peak_rss_kib": 3138128,
+        "sample_peak_swap_kib": 88388,
+        "sample_major_faults": 5091,
+        "sample_min_system_available_kib": 3071668,
+        "thermal_status_before_after": [
+          1,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "pair": 3,
+        "runtime_token_limit": 2048,
+        "runtime_limit_reported": 2048,
+        "graph_context_limit": 2048,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 54.36,
+        "prefill_tokens_per_s": 14.24,
+        "decode_tokens_per_s": 2.26,
+        "runner_peak_ram_mb": 3547.86,
+        "sample_peak_rss_kib": 3633012,
+        "sample_peak_swap_kib": 678884,
+        "sample_major_faults": 38622,
+        "sample_min_system_available_kib": 2779152,
+        "thermal_status_before_after": [
+          1,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "pair": 4,
+        "runtime_token_limit": 1024,
+        "runtime_limit_reported": 1024,
+        "graph_context_limit": 1024,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 44.86,
+        "prefill_tokens_per_s": 17.21,
+        "decode_tokens_per_s": 4.34,
+        "runner_peak_ram_mb": 3312.22,
+        "sample_peak_rss_kib": 3391716,
+        "sample_peak_swap_kib": 74376,
+        "sample_major_faults": 16152,
+        "sample_min_system_available_kib": 3116440,
+        "thermal_status_before_after": [
+          1,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "pair": 4,
+        "runtime_token_limit": 2048,
+        "runtime_limit_reported": 2048,
+        "graph_context_limit": 2048,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 54.96,
+        "prefill_tokens_per_s": 14.09,
+        "decode_tokens_per_s": 2.32,
+        "runner_peak_ram_mb": 3584.68,
+        "sample_peak_rss_kib": 3670708,
+        "sample_peak_swap_kib": 503272,
+        "sample_major_faults": 78813,
+        "sample_min_system_available_kib": 2746936,
+        "thermal_status_before_after": [
+          1,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      }
+    ]
+  },
+  "context_sweep": {
+    "device": "Android 16 phone, Snapdragon 8 Gen 2 (arm64), 8 GB RAM",
+    "backend": "LiteRT-LM CPU",
+    "max_tokens": 2048,
+    "threads": 2,
+    "fixed_decode_tokens": 16,
+    "trials": [
+      {
+        "block": 1,
+        "input_requested": 1024,
+        "exit_code": 0,
+        "input_processed": 1024,
+        "output_processed": 16,
+        "time_to_first_token_s": 73.05,
+        "prefill_tokens_per_s": 14.13,
+        "decode_tokens_per_s": 1.75,
+        "runner_peak_ram_mb": 3572.41,
+        "sample_peak_rss_kib": 3658152,
+        "sample_peak_swap_kib": 2517188,
+        "sample_major_faults": 191614,
+        "sample_min_system_available_kib": 1370028,
+        "thermal_status_before_after": [
+          1,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "block": 1,
+        "input_requested": 1536,
+        "exit_code": 0,
+        "input_processed": 1536,
+        "output_processed": 16,
+        "time_to_first_token_s": 113.26,
+        "prefill_tokens_per_s": 13.79,
+        "decode_tokens_per_s": 0.52,
+        "runner_peak_ram_mb": 3265.13,
+        "sample_peak_rss_kib": 3343496,
+        "sample_peak_swap_kib": 3396168,
+        "sample_major_faults": 1495474,
+        "sample_min_system_available_kib": 1116768,
+        "thermal_status_before_after": [
+          0,
+          1
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "block": 1,
+        "input_requested": 1900,
+        "exit_code": 0,
+        "input_processed": 1900,
+        "output_processed": 16,
+        "time_to_first_token_s": 149.26,
+        "prefill_tokens_per_s": 13.22,
+        "decode_tokens_per_s": 0.18,
+        "runner_peak_ram_mb": 3769.7,
+        "sample_peak_rss_kib": 3860172,
+        "sample_peak_swap_kib": 3711276,
+        "sample_major_faults": 3546677,
+        "sample_min_system_available_kib": 1730236,
+        "thermal_status_before_after": [
+          1,
+          2
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "block": 1,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 61.22,
+        "prefill_tokens_per_s": 12.79,
+        "decode_tokens_per_s": 0.87,
+        "runner_peak_ram_mb": 3012.62,
+        "sample_peak_rss_kib": 3084920,
+        "sample_peak_swap_kib": 1020268,
+        "sample_major_faults": 1948171,
+        "sample_min_system_available_kib": 1219484,
+        "thermal_status_before_after": [
+          0,
+          0
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "block": 2,
+        "input_requested": 1024,
+        "exit_code": 0,
+        "input_processed": 1024,
+        "output_processed": 16,
+        "time_to_first_token_s": 57.09,
+        "prefill_tokens_per_s": 18.07,
+        "decode_tokens_per_s": 2.36,
+        "runner_peak_ram_mb": 3588.01,
+        "sample_peak_rss_kib": 3674124,
+        "sample_peak_swap_kib": 2382760,
+        "sample_major_faults": 216599,
+        "sample_min_system_available_kib": 1337076,
+        "thermal_status_before_after": [
+          2,
+          2
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "block": 2,
+        "input_requested": 1536,
+        "exit_code": 0,
+        "input_processed": 1536,
+        "output_processed": 16,
+        "time_to_first_token_s": 86.2,
+        "prefill_tokens_per_s": 17.97,
+        "decode_tokens_per_s": 1.38,
+        "runner_peak_ram_mb": 3982.82,
+        "sample_peak_rss_kib": 4078412,
+        "sample_peak_swap_kib": 3304156,
+        "sample_major_faults": 323049,
+        "sample_min_system_available_kib": 1516844,
+        "thermal_status_before_after": [
+          2,
+          2
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "block": 2,
+        "input_requested": 1900,
+        "exit_code": 0,
+        "input_processed": 1900,
+        "output_processed": 16,
+        "time_to_first_token_s": 114.77,
+        "prefill_tokens_per_s": 16.87,
+        "decode_tokens_per_s": 0.47,
+        "runner_peak_ram_mb": 3987.61,
+        "sample_peak_rss_kib": 4083312,
+        "sample_peak_swap_kib": 3627840,
+        "sample_major_faults": 964694,
+        "sample_min_system_available_kib": 1690432,
+        "thermal_status_before_after": [
+          2,
+          2
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      },
+      {
+        "block": 2,
+        "input_requested": 768,
+        "exit_code": 0,
+        "input_processed": 768,
+        "output_processed": 16,
+        "time_to_first_token_s": 40.29,
+        "prefill_tokens_per_s": 19.21,
+        "decode_tokens_per_s": 3.32,
+        "runner_peak_ram_mb": 3828.56,
+        "sample_peak_rss_kib": 3920444,
+        "sample_peak_swap_kib": 243368,
+        "sample_major_faults": 103478,
+        "sample_min_system_available_kib": 2730512,
+        "thermal_status_before_after": [
+          2,
+          2
+        ],
+        "battery_saver_before_after": [
+          0,
+          0
+        ],
+        "valid": true
+      }
+    ]
+  }
+}

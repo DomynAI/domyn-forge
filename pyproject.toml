@@ -74,6 +74,8 @@ explicit = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Lets tests import the export scripts as `scripts.litert.*`.
+pythonpath = ["."]
 markers = [
     "integration: multi-GPU end-to-end tests (skipped without enough GPUs; select with `-m integration`)",
 ]

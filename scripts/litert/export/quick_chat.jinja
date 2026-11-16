@@ -1,0 +1,23 @@
+{%- macro text(content) -%}
+  {%- if content is string -%}
+    {{- content -}}
+  {%- else -%}
+    {%- for item in content if item.type == 'text' -%}
+      {{- item.text -}}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endmacro -%}
+{{- '<|im_start|>system\nYou are Domyn Edge, a model trained by Domyn.' -}}
+{%- if messages and messages[0].role == 'system' -%}
+  {%- set system_text = text(messages[0].content)|trim -%}
+  {%- if system_text -%}{{- '\n\n' + system_text -}}{%- endif -%}
+{%- endif -%}
+{{- '<|im_end|>\n' -}}
+{%- for message in messages if message.role in ['user', 'assistant'] -%}
+  {{- '<|im_start|>' + message.role + '\n' -}}
+  {{- text(message.content)|trim -}}
+  {{- '<|im_end|>\n' -}}
+{%- endfor -%}
+{%- if add_generation_prompt -%}
+  {{- '<|im_start|>assistant\n<think>\n\n</think>\n\n' -}}
+{%- endif -%}

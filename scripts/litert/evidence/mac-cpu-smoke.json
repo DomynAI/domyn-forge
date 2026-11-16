@@ -1,0 +1,121 @@
+{
+  "bundle_sha256": "31425c2ce528f08cb24748add0da99dadf2106437843252467017464c670ea18",
+  "threads": 1,
+  "disk_cache": false,
+  "gates": {
+    "floor": {
+      "environment": {
+        "runtime": "0.19.1",
+        "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+        "context": 1024,
+        "backend": "cpu"
+      },
+      "results": [
+        {
+          "case": "addition",
+          "passed": true,
+          "degenerate": false,
+          "answer": "42"
+        },
+        {
+          "case": "capital",
+          "passed": true,
+          "degenerate": false,
+          "answer": "The capital of Japan is Tokyo."
+        },
+        {
+          "case": "opposite",
+          "passed": true,
+          "degenerate": false,
+          "answer": "The opposite of \"hot\" is \"cold.\""
+        },
+        {
+          "case": "week",
+          "passed": true,
+          "degenerate": false,
+          "answer": "Seven days."
+        },
+        {
+          "case": "translation",
+          "passed": true,
+          "degenerate": false,
+          "answer": "Thank you in French is \"Merci.\""
+        },
+        {
+          "case": "multiplication",
+          "passed": true,
+          "degenerate": false,
+          "answer": "8 times 7 is 56."
+        },
+        {
+          "case": "decimal",
+          "passed": false,
+          "degenerate": false,
+          "answer": "0.11 is larger than 0.9."
+        },
+        {
+          "case": "rhyme",
+          "passed": true,
+          "degenerate": false,
+          "answer": "Roses are red, violets are blue."
+        }
+      ],
+      "summary": {
+        "cache_bytes_after": 0,
+        "peak_process_rss_bytes": 8561262592,
+        "correct": 7,
+        "examples": 8,
+        "degenerate": 0,
+        "passed": true
+      }
+    },
+    "all": {
+      "environment": {
+        "runtime": "0.19.1",
+        "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+        "context": 1024,
+        "backend": "cpu"
+      },
+      "results": [
+        {
+          "case": "arithmetic",
+          "passed": true,
+          "degenerate": false,
+          "answer": "4"
+        },
+        {
+          "case": "recall_setup",
+          "passed": true,
+          "degenerate": false,
+          "answer": "OK"
+        },
+        {
+          "case": "recall_arithmetic",
+          "passed": true,
+          "degenerate": false,
+          "answer": "42"
+        },
+        {
+          "case": "recall",
+          "passed": true,
+          "degenerate": false,
+          "answer": "MINT-742"
+        },
+        {
+          "case": "long_prefill",
+          "passed": true,
+          "degenerate": false,
+          "answer": "LIME-381"
+        }
+      ],
+      "summary": {
+        "cache_bytes_after": 0,
+        "peak_process_rss_bytes": 8073297920,
+        "correct": 5,
+        "examples": 5,
+        "degenerate": 0,
+        "passed": true
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "regex": ".*",
+    "operation": "FULLY_CONNECTED",
+    "algorithm_key": "OCTAV",
+    "op_config": {
+      "weight_tensor_config": {
+        "num_bits": 4,
+        "granularity": "BLOCKWISE_32",
+        "symmetric": true
+      },
+      "compute_precision": "INTEGER"
+    }
+  },
+  {
+    "regex": ".*",
+    "operation": "EMBEDDING_LOOKUP",
+    "algorithm_key": "min_max_uniform_quantize",
+    "op_config": {
+      "weight_tensor_config": {
+        "num_bits": 8,
+        "granularity": "CHANNELWISE",
+        "symmetric": true
+      },
+      "compute_precision": "INTEGER"
+    }
+  }
+]
