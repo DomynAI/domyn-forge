@@ -24,8 +24,8 @@ commands are in [BENCHMARKING.md](BENCHMARKING.md).
 | Mac CPU decode, 2 threads, 128 input tokens | — | 15.8 tok/s | 22.2 tok/s |
 | Android phone CPU decode, 2 threads, 128 / 768 input tokens | — | 4.1 / 5.7 tok/s | 6.8 / 7.8 tok/s |
 
-See [QUALIFICATION.md](QUALIFICATION.md#highlights) for what stood out in the conversion: the sliding-window
-off-by-one, the 289 MiB attention-mask constants removed by `--compact-prefill-mask`, and the phone's memory limits.
+See [QUALIFICATION.md](QUALIFICATION.md#highlights) for what stood out in the conversion: the 289 MiB
+attention-mask constants removed by `--compact-prefill-mask`, the quantization cost, and the phone's memory limits.
 The raw and summarized results behind this table are in [`evidence/`](evidence/).
 
 ## Overview

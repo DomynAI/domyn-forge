@@ -15,7 +15,6 @@ Every number below comes from a file in [`evidence/`](evidence/) or can be recom
 | | What stood out |
 | --- | --- |
 | 🧩 **No model-specific export code** | The canonical Transformers v5 modeling in this repository goes through LiteRT Torch's generic Hugging Face path. The only Domyn-specific code is the stop token and thinking flag in the bundle metadata. |
-| 🎯 **Off-by-one in the window** | The checkpoint's flash window of 1,024 previous tokens is `sliding_window: 1025` in Transformers, which counts the current token. With that, legacy and staged logits are identical across the window boundary. |
 | ✂️ **289 MiB of mask constants removed** | LiteRT Torch's V2 lowering turned a scalar BF16 mask fill into two full-size FP32 constants. Rewriting the `select` in FP32 keeps the fill a 4-byte scalar: the bundle shrinks by 10.7% (2.63 → 2.35 GiB) with bit-identical INT4 weights. We found no public report of this converter issue. |
 | 📉 **Quantization costs about 4 GSM8K points** | On the full GSM8K test split (1,319 problems), the bundle solves 85.1% against 89.2% for the BF16 source (−4.1 points, 95% interval −5.8 to −2.4), level with the Qwen3-4B LiteRT-LM INT4 bundle (84.2%). PIQA changes are within noise. |
 | 📱 **Runs offline on an Android phone's CPU** | Tested on an Android 16 phone with a Snapdragon 8 Gen 2 (arm64) and 8 GB of RAM. In Google AI Edge Gallery, offline, it answered arithmetic and multi-turn recall correctly, and found a code in a 1,909-token prompt. Decode is 4–6 tok/s on two CPU threads, about 25–40% slower than Qwen3-4B. |
@@ -38,7 +37,9 @@ This candidate was built on a Mac, with the trace and the V2 compilation in sepa
 ## Checkpoint migration
 
 The published checkpoint uses a flash-attention window of 1,024 previous tokens. Transformers' `sliding_window`
-counts the current token too, so the staged config uses 1,025.
+counts the current token too, so the staged config uses 1,025. This is the convention
+[`convert.py`](../huggingface/convert.py) already applies when it converts from Titan (checked bit-for-bit by
+`tests/test_hf_conversion.py`). Staging is needed only because the published checkpoint predates that layout.
 
 With `check_v5_parity --tokens 1027 --force-math`, the legacy and staged checkpoints gave exactly the same logits for
 both full prefill and cached decode, across the window boundary. On both checkpoints, BF16 cached decode differed
