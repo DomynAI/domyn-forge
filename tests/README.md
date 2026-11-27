@@ -41,7 +41,9 @@ uv run pytest tests/test_deployed_checkpoint.py -k hf -rfs
 UV_PROJECT_ENVIRONMENT=.venv-vllm uv run --no-sync pytest tests/test_deployed_checkpoint.py -k vllm -rfs
 ```
 
-The references are greedy completions recorded with HF transformers and `torch_varlen`, the training kernel. Record
+The references are greedy completions recorded with HF transformers and `torch_varlen`, the training kernel. They
+store the GPU architecture they were recorded on (`sm_80` for the current ones). On that architecture `torch_varlen`
+must reproduce the recorded log-probabilities exactly; on any other, every implementation gets the same tolerance. Record
 them again after changing the prompts, the tokenizer or the checkpoint:
 
 ```bash
@@ -66,3 +68,32 @@ srun --account=<account> --partition=boost_usr_prod --qos=boost_qos_dbg \
     --nodes=1 --ntasks=1 --gres=gpu:4 --cpus-per-task=32 --time=00:30:00 \
     bash -c 'module load gcc/12.2.0 cuda/12.6 && uv run --no-sync pytest -v -m integration tests/'
 ```
+
+## Running the tests on AMD GPUs (ROCm)
+
+`torch.cuda.is_available()` is true on ROCm, so the GPU tests run there too. Build the environment with the ROCm
+build of the same PyTorch nightly instead of the CUDA one:
+
+```bash
+uv sync --no-group torch-nightly --group torch-nightly-rocm
+```
+
+As an example, on one GCD of an MI250X node:
+
+```bash
+srun --account=<account> --partition=<partition> --nodes=1 --ntasks=1 --gpus-per-node=1 --cpus-per-task=7 \
+    --mem=60G --time=00:30:00 uv run --no-sync pytest -v -m "not integration" tests/
+```
+
+Known differences on MI250X with `torch==2.16.0.dev20261019+rocm10.1`:
+
+- On ROCm, `varlen_attn` aligns the causal mask to the top left when queries are shorter than keys, where flash
+  attention on CUDA aligns it to the bottom right. HF generation with `torch_varlen` is therefore wrong after the
+  prompt: `test_hf_generation.py::test_chunked_prefill_matches_full_forward` fails, and so does the greedy decoding
+  step of `test_deployed_checkpoint.py` for `torch_varlen`. Training, where both have the same length, is not
+  affected.
+- In `test_deployed_checkpoint.py`, `flex_attention` fails to compile for the 256-wide heads: the default Triton
+  configuration needs more shared memory than the 64 KiB of the MI250X.
+- With `PYTORCH_ALLOC_CONF=expandable_segments:True`, the default of the launch scripts, the first large allocation
+  can hang with the ROCm 10.1 runtime on an older `amdgpu` kernel driver (seen with 6.10.5). Run them with
+  `PYTORCH_ALLOC_CONF=` to disable it.

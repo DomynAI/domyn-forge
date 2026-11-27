@@ -33,7 +33,8 @@ export PYTHONUNBUFFERED=1
 
 # One torchrun per node (--ntasks-per-node=1), each starting one process per GPU.
 # Compute nodes may have no internet access, hence --no-sync: run `uv sync` on the login node first.
-PYTORCH_ALLOC_CONF="expandable_segments:True" \
+# Set PYTORCH_ALLOC_CONF, even to an empty value, to replace the default allocator settings.
+PYTORCH_ALLOC_CONF="${PYTORCH_ALLOC_CONF-expandable_segments:True}" \
 srun uv run --no-sync torchrun \
     --nnodes="$SLURM_NNODES" \
     --nproc_per_node="$SLURM_GPUS_ON_NODE" \
