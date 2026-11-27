@@ -37,6 +37,21 @@ torch-nightly = [
     "torch==2.16.0.dev20261019+cu130",
     "triton",
 ]
+# The same nightly built for AMD GPUs (ROCm), in place of `torch-nightly`:
+# `uv sync --no-group torch-nightly --group torch-nightly-rocm`. Brings triton-rocm and the ROCm runtime as wheels.
+torch-nightly-rocm = [
+    "torch==2.16.0.dev20261019+rocm10.1",
+    # Pulled in by the torch wheel. Listed so that uv takes them from the ROCm index (sources apply to direct
+    # dependencies only); the wheel pins their versions. Only the data-center GPUs are kept, see
+    # `override-dependencies`.
+    "triton-rocm",
+    "rocm",
+    "rocm-sdk-core",
+    "rocm-sdk-libraries",
+    "rocm-sdk-device-gfx90a",
+    "rocm-sdk-device-gfx942",
+    "rocm-sdk-device-gfx950",
+]
 # Serving tests (tests/test_deployed_checkpoint.py): vLLM pins its own torch
 vllm = [
     "vllm==0.33.0",
@@ -59,17 +74,37 @@ prerelease = "allow"
 constraint-dependencies = ["nodejs-wheel-binaries<25"]
 environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
 default-groups = ["dev", "torch-nightly"]
-conflicts = [[{ group = "torch-nightly" }, { group = "vllm" }]]
+# The ROCm torch wheel requires the ROCm runtime for every AMD GPU architecture (`rocm[device-all]`). Keep only the
+# data-center ones: MI200 (gfx90a), MI300 (gfx942) and MI350 (gfx950). For another AMD GPU, add its `device-<gfx>`
+# extra here and its `rocm-sdk-device-<gfx>` package to the `torch-nightly-rocm` group and to the sources.
+override-dependencies = ["rocm[libraries,device-gfx90a,device-gfx942,device-gfx950]==10.1.*"]
+conflicts = [[{ group = "torch-nightly" }, { group = "torch-nightly-rocm" }, { group = "vllm" }]]
 
 [tool.uv.sources]
 torchtitan = { git = "https://github.com/pytorch/torchtitan", tag = "v0.3.0" }
 # Only the nightly group comes from the nightly index; vLLM's torch comes from PyPI.
-torch = { index = "pytorch-nightly", group = "torch-nightly" }
+torch = [
+    { index = "pytorch-nightly", group = "torch-nightly" },
+    { index = "pytorch-nightly-rocm", group = "torch-nightly-rocm" },
+]
 triton = { index = "pytorch-nightly", group = "torch-nightly" }
+# The packages the ROCm torch wheel pulls in come from the same index.
+triton-rocm = { index = "pytorch-nightly-rocm", group = "torch-nightly-rocm" }
+rocm = { index = "pytorch-nightly-rocm" }
+rocm-sdk-core = { index = "pytorch-nightly-rocm", group = "torch-nightly-rocm" }
+rocm-sdk-libraries = { index = "pytorch-nightly-rocm", group = "torch-nightly-rocm" }
+rocm-sdk-device-gfx90a = { index = "pytorch-nightly-rocm", group = "torch-nightly-rocm" }
+rocm-sdk-device-gfx942 = { index = "pytorch-nightly-rocm", group = "torch-nightly-rocm" }
+rocm-sdk-device-gfx950 = { index = "pytorch-nightly-rocm", group = "torch-nightly-rocm" }
 
 [[tool.uv.index]]
 name = "pytorch-nightly"
 url = "https://download.pytorch.org/whl/nightly/cu130"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-nightly-rocm"
+url = "https://download.pytorch.org/whl/nightly/rocm10.1"
 explicit = true
 
 [tool.pytest.ini_options]

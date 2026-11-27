@@ -1,6 +1,7 @@
 {
   "repo": "domyn/Domyn-Edge-SFT",
   "revision": "bfdad8935eede2977b2293b9754597529b21e55c",
+  "gpu_architecture": "sm_80",
   "max_tokens": 1024,
   "completions": [
     {

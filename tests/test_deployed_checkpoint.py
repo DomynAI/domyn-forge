@@ -29,6 +29,8 @@ PROMPTS = [
     + "\nWhat is the code of item 187? Answer with the code only.",
 ]
 MAX_TOKENS = 1024
+# Allowed drift from the recorded log-probabilities on the GPU architecture the references were recorded on, where
+# `torch_varlen`, the recording kernel, reproduces them exactly.
 MAX_LOGPROB_DRIFT = {
     "eager": 0.25,
     "sdpa": 0.25,
@@ -37,6 +39,8 @@ MAX_LOGPROB_DRIFT = {
     "vLLM transformers": 0.25,
     "vLLM native": 0.25,
 }
+# On another GPU architecture the kernels round differently in bfloat16, and no implementation is exact.
+MAX_LOGPROB_DRIFT_OTHER_ARCHITECTURE = 0.25
 
 pytestmark = [
     pytest.mark.skipif(not torch.cuda.is_available(), reason="the deployed checkpoint is tested on a CUDA device"),
@@ -96,6 +100,21 @@ def _build_sft_checkpoint(
     return output_dir, snapshot.name
 
 
+def _gpu_architecture() -> str:
+    """The architecture of the current GPU: `sm_<major><minor>` on CUDA, the `gfx` target on ROCm."""
+    properties = torch.cuda.get_device_properties(0)
+    if torch.version.hip is not None:
+        return properties.gcnArchName.split(":")[0]
+    return f"sm_{properties.major}{properties.minor}"
+
+
+def _max_logprob_drift(name: str, references: dict) -> float:
+    """The drift allowed to implementation `name`: exact only on the architecture the references were recorded on."""
+    if references.get("gpu_architecture") == _gpu_architecture():
+        return MAX_LOGPROB_DRIFT[name]
+    return max(MAX_LOGPROB_DRIFT[name], MAX_LOGPROB_DRIFT_OTHER_ARCHITECTURE)
+
+
 def _prompt_token_ids(tokenizer, prompt: str) -> list[int]:
     """A single user turn, formatted with the chat template for the assistant's answer."""
     messages = [{"role": "user", "content": prompt}]
@@ -117,9 +136,9 @@ def _checked_references(tokenizer, checkpoint_dir: pathlib.Path) -> dict:
 
 
 def _assert_teacher_forcing(
-    name: str, reference: dict, logprobs: list[dict[int, float]], tokenizer, top_k: int = 5
+    name: str, reference: dict, logprobs: list[dict[int, float]], tokenizer, max_drift: float, top_k: int = 5
 ) -> None:
-    """Check an implementation's next-token log-probabilities on the reference prefix."""
+    """Check an implementation's next-token log-probabilities on the reference prefix, within `max_drift`."""
     reference_tokens = reference["completion_token_ids"]
     for offset, (reference_token, reference_top, implementation_logprobs) in enumerate(
         zip(reference_tokens, reference["completion_top_logprobs"], logprobs, strict=True)
@@ -133,7 +152,7 @@ def _assert_teacher_forcing(
         recorded_logprob = dict(map(tuple, reference_top)).get(reference_token)
         if recorded_logprob is not None:
             drift = abs(logprob_of_reference_token - recorded_logprob)
-            assert drift <= MAX_LOGPROB_DRIFT[name], (
+            assert drift <= max_drift, (
                 f"{name}, {reference['prompt'][:60]!r}, token {offset}: log-probability {drift:.3g} from recorded"
             )
 
@@ -205,7 +224,14 @@ def test_hf_sft_completions_match_references(sft_checkpoint_dir, attn_implementa
             dict(zip(tokens, values, strict=True))
             for tokens, values in zip(candidate_tokens.tolist(), candidate_logprobs.tolist(), strict=True)
         ]
-        _assert_teacher_forcing(attn_implementation, reference, candidates, tokenizer, top_k)
+        _assert_teacher_forcing(
+            attn_implementation,
+            reference,
+            candidates,
+            tokenizer,
+            _max_logprob_drift(attn_implementation, references),
+            top_k,
+        )
 
     for reference in references["completions"]:
         prompt = torch.tensor([reference["prompt_token_ids"]], device="cuda")
@@ -260,7 +286,7 @@ def test_vllm_sft_completions_match_references(sft_checkpoint_dir, monkeypatch, 
             {candidate: logprob.logprob for candidate, logprob in output.prompt_logprobs[start + offset].items()}
             for offset in range(len(reference["completion_token_ids"]))
         ]
-        _assert_teacher_forcing(name, reference, candidates, tokenizer, top_k)
+        _assert_teacher_forcing(name, reference, candidates, tokenizer, _max_logprob_drift(name, references), top_k)
 
     # vLLM's own greedy completions must give the reference answers.
     generated = llm.generate(
@@ -314,7 +340,16 @@ def _record_references(top_k: int = 5, repo: str = "domyn/Domyn-Edge-SFT") -> No
             print(f"{prompt[:60]!r} ({len(prompt_token_ids)} tokens) -> {completions[-1]['completion']!r}")
     REFERENCES.parent.mkdir(exist_ok=True)
     REFERENCES.write_text(
-        json.dumps({"repo": repo, "revision": revision, "max_tokens": MAX_TOKENS, "completions": completions}, indent=2)
+        json.dumps(
+            {
+                "repo": repo,
+                "revision": revision,
+                "gpu_architecture": _gpu_architecture(),
+                "max_tokens": MAX_TOKENS,
+                "completions": completions,
+            },
+            indent=2,
+        )
         + "\n"
     )
     print(f"wrote {REFERENCES} for {repo} at revision {revision}")
