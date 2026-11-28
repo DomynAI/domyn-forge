@@ -39,6 +39,7 @@ tested on the [Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/) H
 | 📦 **Data** | A map-style dataloader for pretokenized `*.arrow` shards: memory-mapped, shuffled, exactly resumable from checkpoints, with per-role loss masking for fine-tuning. |
 | 🚀 **Training** | Example files to launch on one node with [`train.sh`](scripts/launch/train.sh) or on several with Slurm through [`train.sbatch`](scripts/launch/train.sbatch). |
 | 🤗 **Export** | Conversion from TorchTitan checkpoints to Hugging Face format, with the modeling code, and a generation script to try the result. |
+| 📱 **On-device** | Conversion from Hugging Face format to an INT4 [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) bundle for offline CPU inference on phones ([scripts/litert/README.md](scripts/litert/README.md)). |
 | ✅ **Tests** | CPU unit tests for the model, adapter and dataloader, plus GPU and 4-GPU integration tests ([tests/README.md](tests/README.md)). |
 
 ---
