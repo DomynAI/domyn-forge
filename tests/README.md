@@ -14,6 +14,7 @@ Tests that need a GPU are skipped when CUDA is not available, so in CI
 | [`test_hf_conversion.py`](test_hf_conversion.py) | Converted config: head sizes, RoPE, layer types and sliding window | DCP -> HF conversion gives the torchtitan residual stream and logits, with every attention implementation; packed documents |
 | [`test_hf_generation.py`](test_hf_generation.py) | — | HF model behaviour on the debug model: chunked prefill with and without a mask, hidden states, `use_cache` and `return_dict` |
 | [`test_deployed_checkpoint.py`](test_deployed_checkpoint.py) | — | The released `domyn/Domyn-Edge-SFT` weights, converted with the current modeling, reproduce the recorded reference completions with every HF attention implementation and with vLLM (see below) |
+| [`test_litert_conversion.py`](test_litert_conversion.py) | Checkpoint staging (`window_sizes` to `layer_types`), option checks, the packaged chat template renders the SFT template's prompt with thinking off. With the LiteRT toolchain: an unquantized HF -> LiteRT-LM conversion of a random 4-layer model gives the HF continuation loss, past the sliding window too; the INT4 bundle of the released `domyn/Domyn-Edge-SFT` adds at most `MAX_NLL_INCREASE` nats per token of continuation loss over the BF16 source (see below) | — |
 | [`test_dataloader_restore.py`](test_dataloader_restore.py) | — | **Integration, 4 GPUs.** DomynEdge training resumed from a checkpoint reproduces the batches, losses and validation batches of an uninterrupted run (varlen and flex) |
 
 Integration tests are marked `integration` and are skipped unless 4 GPUs are visible. Select or exclude them with
@@ -46,6 +47,26 @@ them again after changing the prompts, the tokenizer or the checkpoint:
 
 ```bash
 uv run python tests/test_deployed_checkpoint.py
+```
+
+## LiteRT conversion
+
+The conversion tests in [`test_litert_conversion.py`](test_litert_conversion.py) run in the LiteRT environment
+described in [scripts/litert/README.md](../scripts/litert/README.md#installation), with `pytest` installed in it, and
+are skipped elsewhere:
+
+```bash
+.venv-litert/bin/python -m pytest tests/test_litert_conversion.py -rs
+```
+
+The released checkpoint test needs `domyn/Domyn-Edge-SFT` at the qualified revision, in the local Hugging Face cache
+or in a directory named by `DOMYN_EDGE_SFT_DIR`. It checks the weights' SHA-256 before converting them:
+
+```bash
+hf download domyn/Domyn-Edge-SFT --revision bfdad8935eede2977b2293b9754597529b21e55c
+# or, in a directory of your choice:
+hf download domyn/Domyn-Edge-SFT --revision bfdad8935eede2977b2293b9754597529b21e55c --local-dir Domyn-Edge-SFT
+DOMYN_EDGE_SFT_DIR=Domyn-Edge-SFT .venv-litert/bin/python -m pytest tests/test_litert_conversion.py -k sft -rs
 ```
 
 ## Running the GPU tests on Leonardo
